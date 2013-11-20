@@ -1,5 +1,5 @@
-{ "_id" : { "$oid" : "525f80b6b1d8a06814000060" }, "name" : "Family Pics", "description" : "Pics of the family throughout the years.", "enabled" : true, "coverPic" : "5265be2f8ad669480f000002", "coverPicPath" : "", "picture" : "" }
-{ "_id" : { "$oid" : "525f9644b1d8a06814000061" }, "name" : "Vacation Pics", "description" : "Travelling is so much fun!!! ", "enabled" : true, "coverPic" : "526b684c8232b0e411000006" }
-{ "_id" : { "$oid" : "5260b1907cdc4d5c12000005" }, "name" : "Selfies", "description" : ":)", "enabled" : true, "coverPic" : "526c59018232b0e411000009", "picture" : "" }
-{ "_id" : { "$oid" : "526b5e208232b0e411000003" }, "name" : "For Fun", "description" : "Cool visual art ", "enabled" : true, "coverPic" : "5271b6888232b0e411000012", "coverPicPath" : "", "picture" : "" }
-{ "_id" : { "$oid" : "5271bebb8232b0e411000013" }, "name" : "Our Home", "description" : "Space observatory photos", "enabled" : true, "coverPic" : "5271bf298232b0e411000014", "coverPicPath" : "/img/no_pic.jpg" }
+{ "_id" : "525f80b6b1d8a06814000060" , "name" : "Family Pics", "description" : "Pics of the family throughout the years.", "enabled" : true, "coverPic" : "5265be2f8ad669480f000002", "coverPicPath" : "", "picture" : "" }
+{ "_id" : "525f9644b1d8a06814000061" , "name" : "Vacation Pics", "description" : "Travelling is so much fun!!! ", "enabled" : true, "coverPic" : "526b684c8232b0e411000006" }
+{ "_id" : "5260b1907cdc4d5c12000005" , "name" : "Selfies", "description" : ":)", "enabled" : true, "coverPic" : "526c59018232b0e411000009", "picture" : "" }
+{ "_id" : "526b5e208232b0e411000003" , "name" : "For Fun", "description" : "Cool visual art ", "enabled" : true, "coverPic" : "5271b6888232b0e411000012", "coverPicPath" : "", "picture" : "" }
+{ "_id" : "5271bebb8232b0e411000013" , "name" : "Our Home", "description" : "Space observatory photos", "enabled" : true, "coverPic" : "5271bf298232b0e411000014", "coverPicPath" : "/img/no_pic.jpg" }

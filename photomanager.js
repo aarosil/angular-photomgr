@@ -83,7 +83,12 @@ exports.findAlbumName = function(req, res) {
 	mongodb.MongoClient.connect(mongoUri, function (err, db) {
 		db.collection('albums', function(err, collection) {
 			collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
-				res.send(item);
+				if (err) {
+					console.log(err);
+					res.send(err);
+				} else {
+					res.send(item);
+				}				
 			});
 		});
 	});

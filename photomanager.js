@@ -1,18 +1,35 @@
 var Db = require('mongodb').Db;
+var mongodb = require('mongodb');
 var Connection = require('mongodb').Connection;
 var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSONPure;
 var ObjectID = require('mongodb').ObjectID;
 
 var mongoUri = process.env.MONGOLAB_URI || 'mongodb://user:pass@localhost:27017/ng-photomanager-db';
+//var re = /mongodb\:\/\/(.+)\:(.+)\@(.+)\:(.+)\/(.+)/
+//var uriData = JSON.parse(mongoUri.replace(re, '{"user": "$1", "pass": "$2", "host": "$3", "port": "$4", "dbname": "$5"}'));
 
-var re = /mongodb\:\/\/(.+)\:(.+)\@(.+)\:(.+)\/(.+)/
-var uriData = JSON.parse(mongoUri.replace(re, '{"user": "$1", "pass": "$2", "host": "$3", "port": "$4", "dbname": "$5"}'));
+//var server = new Server(uriData.host, uriData.port, {auto_reconnect: true});
+//db = new Db(uriData.dbname, server, {safe:true});
 
 
-var server = new Server(uriData.host, uriData.port, {auto_reconnect: true});
-db = new Db(uriData.dbname, server, {safe:true});
+mongodb.MongoClient.connect(mongoUri, function (err, db) {
+	if(!err) {
+		console.log('Connected to the database');
+		db.collection('photos', {safe:true}, function(err, collection) {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log('Collection: photos');
+			}
+		});
 
+	} else {
+		console.log("error: " + err);
+	}
+});
+
+/**
 db.open(function(err,db){
 	console.log(uriData);
 	if(!err) {
@@ -25,24 +42,28 @@ db.open(function(err,db){
 
 	}
 }); 
-
+**/
 
 exports.findAllPhotos = function(req,res) {
-	db.collection('photos', function(err, collection) {
-		collection.find().toArray(function(err,items) {
-			res.send(items);		
+	mongodb.MongoClient.connect(mongoUri, function (err, db) {
+		db.collection('photos', function(err, collection) {
+			collection.find().toArray(function(err,items) {
+				res.send(items);		
+			});
 		});
 	});
 };
 
 exports.findAllAlbums = function(req, res) {
-	db.collection('albums', function(err, collection) {
-		collection.find().toArray(function(err,items) {
-			if (items) {
-				res.send(items);		
-			} else {
-				console.log(err);
-			}
+	mongodb.MongoClient.connect(mongoUri, function (err, db) {
+		db.collection('albums', function(err, collection) {
+			collection.find().toArray(function(err,items) {
+				if (items) {
+					res.send(items);		
+				} else {
+					console.log(err);
+				}
+			});
 		});
 	});
 };

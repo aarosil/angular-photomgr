@@ -29,21 +29,6 @@ mongodb.MongoClient.connect(mongoUri, function (err, db) {
 	}
 });
 
-/**
-db.open(function(err,db){
-	console.log(uriData);
-	if(!err) {
-		console.log('Connected to the database');
-		db.collection('photos', {safe:true}, function(err, collection) {
-			if (err) {
-				console.log("Collection didn't exist, populating database");
-			}
-		});
-
-	}
-}); 
-**/
-
 exports.findAllPhotos = function(req,res) {
 	mongodb.MongoClient.connect(mongoUri, function (err, db) {
 		db.collection('photos', function(err, collection) {
@@ -62,6 +47,7 @@ exports.findAllAlbums = function(req, res) {
 					res.send(items);		
 				} else {
 					console.log(err);
+					res.send(err);
 				}
 			});
 		});
@@ -70,47 +56,54 @@ exports.findAllAlbums = function(req, res) {
 
 exports.findAllPhotosInAlbum = function(req, res) {
 	var id = req.params.id;
-	db.collection('photos', function(err, collection) {
-		collection.find({'album': id}).toArray(function(err,items) {
-			res.send(items);
+	mongodb.MongoClient.connect(mongoUri, function (err, db) {
+		db.collection('photos', function(err, collection) {
+			collection.find({'album': id}).toArray(function(err,items) {
+				res.send(items);
+			});
 		});
 	});
 };
 
 exports.findPhotoById = function(req, res) {
     var id = req.params.id;
-	console.log("Lookup PhotoID: " + id);    
-    db.collection('photos', function(err, collection) {
-        collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
-            res.send(item);
-        });
+	console.log("Lookup PhotoID: " + id); 
+	mongodb.MongoClient.connect(mongoUri, function (err, db) {   
+	    db.collection('photos', function(err, collection) {
+	        collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
+	            res.send(item);
+	        });
+	    });
     });
 };
 
 exports.findAlbumName = function(req, res) {
 	var id = req.params.id;
 	console.log("Lookup AlbumID: " + id);
-	db.collection('albums', function(err, collection) {
-		collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
-			res.send(item);
-		})
-	})
-
+	mongodb.MongoClient.connect(mongoUri, function (err, db) {
+		db.collection('albums', function(err, collection) {
+			collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, item) {
+				res.send(item);
+			});
+		});
+	});
 };
 
 exports.addAlbum = function(req, res) { 
 	var album = req.body;
 	console.log('Adding album: ' + JSON.stringify(album));
-	db.collection('albums', function (err, collection) {
-		collection.insert(album, {safe:true}, function(err, result) {
-			if (err) {
-				res.send({'error':'An error has occurred'});
-			} else {
-				console.log('Success: ' + JSON.stringify(result[0]));
-				res.send(result[0]);
-			}
-		})
-	})
+	mongodb.MongoClient.connect(mongoUri, function (err, db) {
+		db.collection('albums', function (err, collection) {
+			collection.insert(album, {safe:true}, function(err, result) {
+				if (err) {
+					res.send({'error':'An error has occurred'});
+				} else {
+					console.log('Success: ' + JSON.stringify(result[0]));
+					res.send(result[0]);
+				}
+			});
+		});
+	});
 };
 
 exports.updateAlbum = function(req,res) {
@@ -118,34 +111,38 @@ exports.updateAlbum = function(req,res) {
 	var album = req.body;
 	delete album._id;
 	console.log("Updating album: " + id)
-	db.collection('albums', function(err, collection) {
-		collection.update({'_id': new BSON.ObjectID(id)}, album, {safe:true}, function(err,result){
-			if (err) {
-				res.send({'error':'An error has occurred - ' + err});
-				console.log(err);
-			} else {
-				console.log('' + result + ' documents updated');
-				req.body['_id'] = id;
-				res.send(req.body);
+	mongodb.MongoClient.connect(mongoUri, function (err, db) {
+		db.collection('albums', function(err, collection) {
+			collection.update({'_id': new BSON.ObjectID(id)}, album, {safe:true}, function(err,result){
+				if (err) {
+					res.send({'error':'An error has occurred - ' + err});
+					console.log(err);
+				} else {
+					console.log('' + result + ' documents updated');
+					req.body['_id'] = id;
+					res.send(req.body);
 
-			}
-		} )
-	})
+				}
+			});
+		});
+	});
 };
 
 exports.addPhoto = function(req,res) {
 	var photo = req.body;
 	console.log('Adding photo: ' + JSON.stringify(photo));
-	db.collection('photos', function(err, collection) {
-		collection.insert(photo, {safe:true}, function(err, result) {
-			if (err) {
-				res.send({'error':'An error has occurred'});
-			} else {
-				console.log('Success' + JSON.stringify(result[0]));
-				res.send(result[0]);
-			}
-		})
-	})
+	mongodb.MongoClient.connect(mongoUri, function (err, db) {
+		db.collection('photos', function(err, collection) {
+			collection.insert(photo, {safe:true}, function(err, result) {
+				if (err) {
+					res.send({'error':'An error has occurred'});
+				} else {
+					console.log('Success' + JSON.stringify(result[0]));
+					res.send(result[0]);
+				}
+			});
+		});
+	});
 };
 
 exports.updatePhoto = function(req,res) {
@@ -153,47 +150,53 @@ exports.updatePhoto = function(req,res) {
 	var photo = req.body;
 	delete photo._id;
 	console.log("Updating photo: " + id)
-	db.collection('photos', function(err, collection) {
-		collection.update({'_id': new BSON.ObjectID(id)}, photo, {safe:true}, function(err,result){
-			if (err) {
-				res.send({'error':'An error has occurred - ' + err});
-				console.log(err);
-			} else {
-				console.log('' + result + ' documents updated');
-				req.body['_id'] = id;
-				res.send(req.body);
-			}
-		} )
-	})
+	mongodb.MongoClient.connect(mongoUri, function (err, db) {	
+		db.collection('photos', function(err, collection) {
+			collection.update({'_id': new BSON.ObjectID(id)}, photo, {safe:true}, function(err,result){
+				if (err) {
+					res.send({'error':'An error has occurred - ' + err});
+					console.log(err);
+				} else {
+					console.log('' + result + ' documents updated');
+					req.body['_id'] = id;
+					res.send(req.body);
+				}
+			});
+		});
+	});
 };
 
 exports.deletePhoto = function(req, res) {
     var id = req.params.id;
     console.log('Deleting photo: ' + id);
-    db.collection('photos', function(err, collection) {
-        collection.remove({'_id': new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
-            if (err) {
-                res.send({'error':'An error has occurred - ' + err});
-            } else {
-                console.log('' + result + ' document(s) deleted');
-                res.send(result[0]);                
-            }
-        });
+    mongodb.MongoClient.connect(mongoUri, function (err, db) {	
+	    db.collection('photos', function(err, collection) {
+	        collection.remove({'_id': new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
+	            if (err) {
+	                res.send({'error':'An error has occurred - ' + err});
+	            } else {
+	                console.log('' + result + ' document(s) deleted');
+	                res.send(result[0]);                
+	            }
+	        });
+	    });
     });
 };
 
 exports.deleteAlbum = function(req, res) {
     var id = req.params.id;
     console.log('Deleting album: ' + id);
-    db.collection('albums', function(err, collection) {
-        collection.remove({'_id': new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
-            if (err) {
-                res.send({'error':'An error has occurred - ' + err});
-            } else {
-                console.log('' + result + ' document(s) deleted');
-                res.send(req.body);                
-            }
-        });
+    mongodb.MongoClient.connect(mongoUri, function (err, db) {
+	    db.collection('albums', function(err, collection) {
+	        collection.remove({'_id': new BSON.ObjectID(id)}, {safe:true}, function(err, result) {
+	            if (err) {
+	                res.send({'error':'An error has occurred - ' + err});
+	            } else {
+	                console.log('' + result + ' document(s) deleted');
+	                res.send(req.body);                
+	            }
+	        });
+	    });
     });
 };
 

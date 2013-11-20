@@ -1,0 +1,22 @@
+      <div class="col-lg-12">
+          <div class="navbar navbar-default" >
+              <div class="navbar-inner toolbar">
+                  <ul class="nav navbar-nav navbar-default">
+                    <li data-ng-class="{active: view === 'list'}" class="toolbaritem">
+                      <a href="#{{section.url}}"><span class="glyphicon glyphicon-list"></span> List View</a>
+                    </li>
+                    <li data-ng-class="{active: view === 'grid'}" class="toolbaritem">
+                      <a href="#{{section.url}}?view=grid"><span class="glyphicon glyphicon-th"></span> Grid View</a>
+                    </li>
+                    <li data-ng-class="{active: view === 'add'}" class="toolbaritem">
+                      <a href='#{{section.url}}/add'><span class="glyphicon glyphicon-plus"></span> Add {{section.name}}</a>
+                    </li>
+                  </ul>
+                  <form class="navbar-form navbar-right">
+                      <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Search" data-ng-model="searchText" data-ng-hide="view === 'add'||view === 'detail'"/>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>

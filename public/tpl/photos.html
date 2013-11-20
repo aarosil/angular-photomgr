@@ -1,0 +1,36 @@
+<div class="container">
+	<h3 class="section-header">Photos</h3>
+
+	 <div class="row">
+    	<div data-ng-include="'/tpl/subnav.html'"></div>
+  	</div>
+
+	<div class="row" data-ng-if="view === 'list'">
+		<div class="col-lg-2">       
+			<ul class="album-list">
+			    <li data-ng-repeat="photo in photos |filter:searchText">
+			        <a href="#/photos/{{photo._id}}?view=detail">{{photo.name}}</a>
+			    </li>
+			</ul>      
+		</div>
+	</div>
+
+	<div class="row grid-container" data-ng-if="view === 'grid'">
+      <div class="col-lg-2" data-ng-repeat="photo in photos| filter:searchText">
+        <a href="#/photos/{{photo._id}}?view=detail">
+          <div class="thumbnail photogrid-thumbnail">
+            <img class="img-thumbnail" style="width: 120px; height: 120px" data-ng-src="{{photo.filepath}}"/>
+            <div class="caption">
+              <h4>{{photo.name}}</h4>
+              <p>{{photo.description}}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div data-ng-if="view === 'add'||view === 'detail'" >
+      <div data-ng-include="'/tpl/photo-detail.html'"></div>  
+    </div>    
+
+</div>

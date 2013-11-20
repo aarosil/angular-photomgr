@@ -1,0 +1,67 @@
+<div class="container">
+  
+  <h3 class="section-header">Albums</h3>
+        
+  <div class="row">
+    <div data-ng-include="'/tpl/subnav.html'"></div>
+  </div>
+
+  <div class="switch">
+
+    <div class="row album-list" data-ng-if="view === 'list'">
+      <div class="col-lg-12">
+        <table id="album-list" class="table table-bordered">
+          <tbody>  
+
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Show?</th>
+            </tr>
+
+            <!-- one row per album --> 
+            <tr data-ng-repeat="album in albums | filter:searchText" data-ng-model="albums" >
+              <td><a href="#/albums/{{album._id}}?view=detail">{{album.name}}</a></td>
+              <td>{{album.description}}</td>
+              <td><input type="checkbox" data-ng-checked="album.enabled" data-ng-click="pmSvc.toggleEnabled(album._id)"></td> 
+            </tr>
+
+            <!-- row for add new album form--> 
+            <tr>
+              <td><input data-ng-model="newAlbum.name" type="text" class="form-control" placeholder="New album"></td>
+              <td><input data-ng-model="newAlbum.description" type="text" class="form-control" placeholder="Description"></td>
+              <td><input data-ng-model="newAlbum.enabled" type="checkbox"> </td>    
+            </tr>
+
+            <!-- buttons -->
+            <tr>
+              <td colspan="3"><a class="btn btn-primary" ng-click="saveAlbum(newAlbum)" data-ng-disabled="!newAlbum.name">Save New</a></td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row grid-container" data-ng-if="view === 'grid'">
+      <div class="col-lg-4" data-ng-repeat="album in albums| filter:filter.text">
+        <a href="#/albums/{{album._id}}?view=detail">
+          <div class="thumbnail albumgrid-thumbnail">
+            <img class="img-thumbnail" style="width: 280px; height: 240px" data-ng-src="{{album.coverPicPath}}"/>
+            <div class="caption">
+              <h3>{{album.name}}</h3>
+              <p>{{album.description}}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+
+    <div data-ng-if="view === 'add'||view === 'detail'" >
+      <div data-ng-include="'/tpl/album-detail.html'"></div>  
+    </div>
+
+  </div>
+
+</div>

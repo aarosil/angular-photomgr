@@ -38,7 +38,11 @@ exports.findAllPhotos = function(req,res) {
 exports.findAllAlbums = function(req, res) {
 	db.collection('albums', function(err, collection) {
 		collection.find().toArray(function(err,items) {
-			res.send(items);		
+			if (items) {
+				res.send(items);		
+			} else {
+				console.log(err);
+			}
 		});
 	});
 };

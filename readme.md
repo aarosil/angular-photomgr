@@ -8,3 +8,6 @@ This application demonstrates:
 * Using AngularJS with $resource in a factory to access a backend Web API service 
 * Techniques of showing multiple views of the same data (list view and grid view)
 * A custom $resource action for uploading user files to the server
+
+##### Live Demo
+[http://young-badlands-8496.herokuapp.com](Live Demo - work in progress)

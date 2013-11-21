@@ -37,15 +37,19 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', 'PhotoMgrService', 'photo
 photomgrControllers.controller('AlbumCtrl', ['$scope', 'PhotoMgrService', 'album', 'albums', 'photo', 'photos', '$location', 'view',
 	function($scope, PhotoMgrService, album, albums, photo, photos, $location, view) {
 
-		$scope.clickPhoto = function(id) {
-			$scope.photo = $scope.pmSvc.getPhoto(id);
+		$scope.clickPhoto = function(p) {
+			$scope.photo = p;
+		}
+
+		$scope.setCoverPic = function(p) {
+			$scope.album.coverPicPath = p.filepath;
+			$scope.album.coverPic = p._id;
 		}
 
 		$scope.saveAlbum = function (album) {
 			$scope.pmSvc.saveAlbum(album).then( function(data) {
 				$scope.albums.push(data); //add new album to list &  clear form
-				$scope.newAlbum = $scope.pmSvc.newAlbum();
-				
+				$scope.newAlbum = $scope.pmSvc.newAlbum();				
 			});
 		};
 
@@ -57,15 +61,17 @@ photomgrControllers.controller('AlbumCtrl', ['$scope', 'PhotoMgrService', 'album
 		$scope.albums = albums;
 		$scope.section = {'name': 'Album', 'url':'/albums'};
 
-		if ($scope.photos.length > 0) {$scope.clickPhoto($scope.photos[0]._id);}		
+		if ($scope.photos.length > 0) {$scope.clickPhoto($scope.photos[0]);}	
+		$scope.coverPic = window._.findWhere(photos, {_id: album.coverPic})	;
+
 	}
 ]);
 
 photomgrControllers.controller('GalleryCtrl', ['$scope', 'photos', 'photo', 'album', 'albums', 'PhotoMgrService', 
 	function($scope, photos, photo, album, albums, PhotoMgrService) {
 		
-		$scope.clickPhoto = function(id) {
-			$scope.photo = $scope.pmSvc.getPhoto(id);
+		$scope.clickPhoto = function(p) {
+			$scope.photo = p;
 		}
 
 		$scope.clickAlbum = function(id) {

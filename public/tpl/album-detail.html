@@ -24,12 +24,18 @@
                     <input class="form-control input-sm" data-ng-model="album.name" type="text">
                     </div>
                 </div>
-
+             
+                <input class="form-control input-sm" data-ng-model="album.coverPic" type="hidden">               
+                <input class="form-control input-sm" data-ng-model="album.coverPicPath" type="hidden">
+              
                 <div class="form-group">
                     <label for="name" class="col-lg-4 control-label">Cover Photo:</label>
                     <div class="col-lg-8">                
-                    <select class="form-control input-sm" data-ng-model="album.coverPicPath">
-                        <option data-ng-repeat="photo in photos" data-ng-selected="photo._id === album.coverPic" value="{{photo.filepath}}">{{photo.name}}</option>
+                    <select 
+                        class="form-control input-sm" 
+                        data-ng-model="coverPic" 
+                        data-ng-change="setCoverPic(coverPic)"
+                        data-ng-options="f as f.name for f in photos">
                     </select>
                     </div>
                 </div>
@@ -64,7 +70,7 @@
                 <div class="album list-group">
                     <a data-ng-repeat="item in photos |filter:searchText" 
                         class="list-group-item ng-class:(item._id === photo._id)? 'active' : '';"
-                        data-ng-click="clickPhoto(item._id)">
+                        data-ng-click="clickPhoto(item)">
                         {{item.name}}
                     </a> 
                 </div>     

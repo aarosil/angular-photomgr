@@ -5,11 +5,11 @@ photomgrServices.factory('Photo', ['$resource',
 		return $resource('/photos/:id/', { id: '@_id'}, {
 			query: {method:'GET', isArray:true},
 			uploadPhoto: {
-                method: 'POST',
-                url: '/upload',
-                headers: {'Content-Type': undefined },
-                transformRequest: angular.identity
-            }
+            method: 'POST',
+            url: '/upload',
+            headers: {'Content-Type': undefined },
+            transformRequest: angular.identity
+         }
 		});
 	}]);
 
@@ -17,9 +17,9 @@ photomgrServices.factory('Album', ['$resource',
 	function($resource){
 		return $resource('/albums/:id/', {id: '@_id'}, {
 			query: {method:'GET', isArray:true},
-			getPhotos: {
-                method:'GET', isArray:true, url:'/gallery/:id/'
-            }
+         getPhotos: {
+             method:'GET', isArray:true, url:'/gallery/:id/'
+         }
 		});
 	}]);
 

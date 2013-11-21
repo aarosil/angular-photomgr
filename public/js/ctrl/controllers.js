@@ -41,7 +41,7 @@ photomgrControllers.controller('AlbumCtrl', ['$scope', 'PhotoMgrService', 'album
 			$scope.photo = p;
 		}
 
-		$scope.setCoverPic = function(p) {
+		$scope.setCoverPic = function(p) { //used by select to set photoId and path of the album's cover photo
 			$scope.album.coverPicPath = p.filepath;
 			$scope.album.coverPic = p._id;
 		}
@@ -61,7 +61,7 @@ photomgrControllers.controller('AlbumCtrl', ['$scope', 'PhotoMgrService', 'album
 		$scope.albums = albums;
 		$scope.section = {'name': 'Album', 'url':'/albums'};
 
-		if ($scope.photos.length > 0) {$scope.clickPhoto($scope.photos[0]);}	
+		if (photos.length > 0) {$scope.clickPhoto(photos[0]);}	
 		$scope.coverPic = window._.findWhere(photos, {_id: album.coverPic})	;
 
 	}
@@ -74,8 +74,8 @@ photomgrControllers.controller('GalleryCtrl', ['$scope', 'photos', 'photo', 'alb
 			$scope.photo = p;
 		}
 
-		$scope.clickAlbum = function(id) {
-			$scope.photo = $scope.pmSvc.getAlbum(id);
+		$scope.clickAlbum = function(a) {
+			$scope.album = a;
 		}		
 
 		$scope.pmSvc = PhotoMgrService;

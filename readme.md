@@ -10,4 +10,4 @@ This application demonstrates:
 * A custom $resource action for uploading user files to the server
 
 ##### Live Demo
-[http://young-badlands-8496.herokuapp.com](Live Demo - work in progress)
+[http://young-badlands-8496.herokuapp.com](http://young-badlands-8496.herokuapp.com)

@@ -8,7 +8,7 @@
 	<div class="row" data-ng-if="view === 'list'">
 		<div class="col-lg-2">       
 			<ul class="album-list">
-			    <li data-ng-repeat="photo in photos |filter:searchText">
+			    <li data-ng-repeat="photo in photos |filter:pmSvc.filter">
 			        <a href="#/photos/detail/{{photo._id}}">{{photo.name}}</a>
 			    </li>
 			</ul>      
@@ -16,7 +16,7 @@
 	</div>
 
 	<div class="row grid-container" data-ng-if="view === 'grid'">
-      <div class="col-lg-2" data-ng-repeat="photo in photos| filter:searchText">
+      <div class="col-lg-2" data-ng-repeat="photo in photos| filter:pmSvc.filter">
         <a href="#/photos/detail/{{photo._id}}">
           <div class="thumbnail photogrid-thumbnail">
             <img class="img-thumbnail" style="width: 120px; height: 120px" data-ng-src="{{photo.filepath}}"/>

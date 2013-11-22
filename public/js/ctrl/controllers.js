@@ -30,6 +30,7 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', 'PhotoMgrService', 'album
 		$scope.photo = photo;
 		$scope.photos = photos;
 		$scope.albums = albums;
+		$scope.pmSvc.filter = '';
 		$scope.section = {'name': 'Photo', 'url':'/photos'}; //used to set links in subnav.html
 	}
 ]);
@@ -59,6 +60,7 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 		$scope.photos = photos;
 		$scope.newAlbum = $scope.pmSvc.newAlbum()
 		$scope.albums = albums;
+		$scope.pmSvc.filter = '';
 
 		$scope.section = {'name': 'Album', 'url':'/albums'}; //used to set links in subnav.html
 

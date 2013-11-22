@@ -14,8 +14,8 @@ photomgrControllers.controller('NavCtrl', ['$scope', '$location',
 	}
 ]);
 
-photomgrControllers.controller('PhotoCtrl', ['$scope', 'PhotoMgrService', 'pmData',
-	function($scope, PhotoMgrService, pmData) {
+photomgrControllers.controller('PhotoCtrl', ['$scope', 'PhotoMgrService', 'albums', 'photos', 'album', 'photo', 'view',
+	function($scope, PhotoMgrService, albums, photos, album, photo, view) {
 		
 		$scope.uploadFile = function (files) {
 			var fd  = new FormData();
@@ -26,16 +26,16 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', 'PhotoMgrService', 'pmDat
 		}
 
 		$scope.pmSvc = PhotoMgrService;
-		$scope.view = pmData.view ? pmData.view : 'list';
-		$scope.photo = pmData.photo;
-		$scope.photos = pmData.photos;
-		$scope.albums = pmData.albums;
+		$scope.view = view ? view : 'list';
+		$scope.photo = photo;
+		$scope.photos = photos;
+		$scope.albums = albums;
 		$scope.section = {'name': 'Photo', 'url':'/photos'}; //used to set links in subnav.html
 	}
 ]);
 
-photomgrControllers.controller('AlbumCtrl', [ '$scope', '$route', '$location', 'PhotoMgrService', 'pmData', 
-	function($scope, $route, $location, PhotoMgrService, pmData) {
+photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albums', 'photos', 'album', 'photo', 'view',
+	function($scope, PhotoMgrService, albums, photos, album, photo, view) {
 
 		$scope.clickPhoto = function(p) {
 			$scope.photo = p;
@@ -54,19 +54,16 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', '$route', '$location', '
 		};
 
 		$scope.pmSvc = PhotoMgrService;
-		$scope.view = pmData.view ? pmData.view : 'list';
-		$scope.album = pmData.album;
-		$scope.photos = pmData.photos;
+		$scope.view = view;
+		$scope.album = album;
+		$scope.photos = photos;
 		$scope.newAlbum = $scope.pmSvc.newAlbum()
-
-
-		$scope.albums = pmData.albums;
-		$scope.photos = pmData.photos;
+		$scope.albums = albums;
 
 		$scope.section = {'name': 'Album', 'url':'/albums'}; //used to set links in subnav.html
 
 		if ($scope.photos.length > 0) {$scope.clickPhoto($scope.photos[0]);}	
-		$scope.coverPic = window._.findWhere(pmData.photos, {_id: $scope.album.coverPic});
+		$scope.coverPic = window._.findWhere(photos, {_id: $scope.album.coverPic});
 	}
 ]);
 
@@ -103,7 +100,7 @@ photomgrControllers.controller('GalleryCtrl', ['$scope', 'albums', 'photos',
 //Pre-load Asynchronous data before route change 
 PhotoMgrData = { 
 
-	/** album: function(Album, $route) {
+	album: function(Album, $route) {
 		return $route.current.params.albumId ? Album.get({id: $route.current.params.albumId}).$promise : new Album();
 	},
 
@@ -116,12 +113,20 @@ PhotoMgrData = {
 	},	
 
 	photos: function(Photo, Album, $route, $location) {	
-		if ($location.path().indexOf('add') !== -1 ) {
+		if ($route.current.params.view === 'add') {
 			return '';
+		} else if ($route.current.params.albumId) {
+			return Album.getPhotos({id: $route.current.params.albumId}).$promise;
 		} else {
-			return $route.current.params.albumId ? Album.getPhotos({id: $route.current.params.albumId}).$promise : Photo.query().$promise;		
+			return Photo.query();
 		}
-	}, **/
+
+	},
+
+	view: function($route) {
+		return $route.current.params.view;
+	}
+	/**, 
 
 	pmData: function($route, Photo, Album) {
 		var pmData = {};
@@ -142,6 +147,7 @@ PhotoMgrData = {
 
 		return pmData;
 	}
+	**/
 
 };
 

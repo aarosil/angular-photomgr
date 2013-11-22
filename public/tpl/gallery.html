@@ -26,6 +26,7 @@
 
 
 		<div class="col-lg-9">
+			<div class="well well-sm">
 			<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
 				<!--
 				<ol class="carousel-indicators">
@@ -41,14 +42,26 @@
 					</div>
 					-->
 				</div>
+				<!--
 				<a class="left carousel-control" data-ng-click="clickPhoto(album._id, prev)" data-slide="prev">
 					<span class="glyphicon glyphicon-chevron-left"></span>
 				</a>
 				<a class="right carousel-control" data-ng-click="clickPhoto(album._id, next)" data-slide="next">
 					<span class="glyphicon glyphicon-chevron-right"></span>
-				</a>				
+				</a>	
+				-->			
 			</div>
+
+			<h4>{{photo.name}} : {{photo.description}}</h4>
+
 		</div>
+		</div>
+
+		<ul class="pagination">
+			<li data-ng-click="clickPhoto(album._id, prev)"><a>&laquo;</a></li>
+			<li data-ng-repeat="p in album.photos" data-ng-class="(p._id === photo._id) ? 'active' : ''" data-ng-click="clickPhoto(album._id, $index)"><a>{{$index + 1}}</a></li>
+			<li data-ng-click="clickPhoto(album._id, next)"><a>&raquo;</a></li>
+		</ul>
 
 	</div>
 

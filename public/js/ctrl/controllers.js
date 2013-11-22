@@ -54,7 +54,7 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 		};
 
 		$scope.pmSvc = PhotoMgrService;
-		$scope.view = view;
+		$scope.view = view ? view : 'list';
 		$scope.album = album;
 		$scope.photos = photos;
 		$scope.newAlbum = $scope.pmSvc.newAlbum()

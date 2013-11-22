@@ -30,3 +30,10 @@ li .media {
     margin-top:15px;
     font-weight: bold;
 }
+.carousel-img img{
+  width: auto;
+  max-height: 520px;
+  min-height: 520px;
+  margin-left:auto;
+  margin-right:auto;
+}

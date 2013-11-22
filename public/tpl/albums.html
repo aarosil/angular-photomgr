@@ -21,7 +21,7 @@
 
             <!-- one row per album --> 
             <tr data-ng-repeat="album in albums | filter:searchText" data-ng-model="albums" >
-              <td><a href="#/albums/{{album._id}}?view=detail">{{album.name}}</a></td>
+              <td><a href="#/albums/detail/{{album._id}}">{{album.name}}</a></td>
               <td>{{album.description}}</td>
               <td><input type="checkbox" data-ng-checked="album.enabled" data-ng-click="pmSvc.toggleEnabled(album._id)"></td> 
             </tr>
@@ -45,7 +45,7 @@
 
     <div class="row grid-container" data-ng-if="view === 'grid'">
       <div class="col-lg-4" data-ng-repeat="album in albums| filter:filter.text">
-        <a href="#/albums/{{album._id}}?view=detail">
+        <a href="#/albums/detail/{{album._id}}">
           <div class="thumbnail albumgrid-thumbnail">
             <img class="img-thumbnail" style="width: 280px; height: 240px" data-ng-src="{{album.coverPicPath}}"/>
             <div class="caption">

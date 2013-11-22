@@ -1,89 +1,86 @@
 
 <div class="row">
 
-    <div>
-
-        <div class="col-lg-4"> 
-            
-            <div>
-            <h3 class="section-header">{{(album._id)? 'Edit ' : 'Add '}}Album</h3>
-            </div>
-
-            <form class="form-horizontal" role="form">
-
-                <div class="form-group">
-                    <label for="id" class="col-lg-4 control-label">ID:</label>
-                    <div class="col-lg-8">
-                    <input class="form-control input-sm" data-ng-model="album._id" disabled="" type="text">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="name" class="col-lg-4 control-label">Name:</label>
-                    <div class="col-lg-8">                
-                    <input class="form-control input-sm" data-ng-model="album.name" type="text">
-                    </div>
-                </div>
-             
-                <input class="form-control input-sm" data-ng-model="album.coverPic" type="hidden">               
-                <input class="form-control input-sm" data-ng-model="album.coverPicPath" type="hidden">
-              
-                <div class="form-group">
-                    <label for="name" class="col-lg-4 control-label">Cover Photo:</label>
-                    <div class="col-lg-8">                
-                    <select 
-                        class="form-control input-sm" 
-                        data-ng-model="coverPic" 
-                        data-ng-change="setCoverPic(coverPic)"
-                        data-ng-options="f as f.name for f in photos">
-                    </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="description" class="col-lg-4 control-label">Description:</label>
-                    <div class="col-lg-8">                
-                    <textarea class="form-control input-sm" data-ng-model="album.description" rows="2"></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-lg-offset-4 col-lg-8">
-                      <div class="checkbox">
-                        <label>                  
-                          <input type="checkbox" data-ng-model="album.enabled" ng-checked="album.enabled"> Show in Gallery 
-                        </label>
-                      </div>
-                    </div>
-                </div>
-
-            </form>
-
-            <a class="btn btn-primary" ng-click="saveAlbum(album)" data-ng-disabled="!album.name">Save</a>
-            <a class="btn btn-default" ng-click="pmSvc.deleteAlbum(album._id)" data-ng-disabled="!album._id">Delete</a>
-        </div>
-
-        <div data-ng-show="photos">
-            <div class="col-lg-2">     
-                <input class="form-control input-sm" type="text" ng-model="searchText" placeholder="Search photos"></input>
-                <p>
-                <div class="album list-group">
-                    <a data-ng-repeat="item in photos |filter:searchText" 
-                        class="list-group-item ng-class:(item._id === photo._id)? 'active' : '';"
-                        data-ng-click="clickPhoto(item)">
-                        {{item.name}}
-                    </a> 
-                </div>     
-            </div>
-
-            <div class="col-lg-6">
-                <div>
-                    <img id="image-detail" data-ng-src="{{photo.filepath}}"><p></p>             
-                </div>
-            </div>
-            
-        </div>
-
+    <div class="col-lg-12">
+        <h3 class="section-header">{{(album._id)? 'Edit ' : 'Add '}}Album</h3>
     </div>
+
+    <div class="col-lg-4"> 
+        
+        <form class="form-horizontal" role="form">
+
+            <div class="form-group">
+                <label for="id" class="col-lg-4 control-label">ID:</label>
+                <div class="col-lg-8">
+                <input class="form-control input-sm" data-ng-model="album._id" disabled="" type="text">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="name" class="col-lg-4 control-label">Name:</label>
+                <div class="col-lg-8">                
+                <input class="form-control input-sm" data-ng-model="album.name" type="text">
+                </div>
+            </div>
+         
+            <input class="form-control input-sm" data-ng-model="album.coverPic" type="hidden">               
+            <input class="form-control input-sm" data-ng-model="album.coverPicPath" type="hidden">
+          
+            <div class="form-group">
+                <label for="name" class="col-lg-4 control-label">Cover Photo:</label>
+                <div class="col-lg-8">                
+                <select 
+                    class="form-control input-sm" 
+                    data-ng-model="coverPic" 
+                    data-ng-change="setCoverPic(coverPic)"
+                    data-ng-options="f as f.name for f in photos">
+                </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="col-lg-4 control-label">Description:</label>
+                <div class="col-lg-8">                
+                <textarea class="form-control input-sm" data-ng-model="album.description" rows="2"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-offset-4 col-lg-8">
+                  <div class="checkbox">
+                    <label>                  
+                      <input type="checkbox" data-ng-model="album.enabled" ng-checked="album.enabled"> Show in Gallery 
+                    </label>
+                  </div>
+                </div>
+            </div>
+
+        </form>
+
+        <a class="btn btn-primary" ng-click="saveAlbum(album)" data-ng-disabled="!album.name">Save</a>
+        <a class="btn btn-default" ng-click="pmSvc.deleteAlbum(album._id)" data-ng-disabled="!album._id">Delete</a>
+    </div>
+
+    <div data-ng-show="photos">
+        <div class="col-lg-2">     
+            <input class="form-control input-sm" type="text" ng-model="searchText" placeholder="Search photos"></input>
+            <p>
+            <div class="album list-group">
+                <a data-ng-repeat="item in photos |filter:searchText" 
+                    class="list-group-item ng-class:(item._id === photo._id)? 'active' : '';"
+                    data-ng-click="clickPhoto(item)">
+                    {{item.name}}
+                </a> 
+            </div>     
+        </div>
+
+        <div class="col-lg-6">
+            <div>
+                <img id="image-detail" data-ng-src="{{photo.filepath}}"><p></p>             
+            </div>
+        </div>
+        
+    </div>
+
 </div>
 

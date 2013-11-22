@@ -4,4 +4,52 @@
 			<h3 class="section-header">Gallery</h3>
 		</div>
 	</div>
+
+	<div class="row">
+
+		<div class="col-lg-3">
+			<div class="panel-group">
+			  <div class="panel panel-default" data-ng-repeat="album in albums| filter:{enabled: true}">
+			    <div class="panel-heading" data-ng-click="clickAlbum($index)">
+			    	<a><h4 class="panel-title">{{album.name}}</h4></a>
+		    	</div>
+			    <div class="panel-collapse" data-ng-class="album.opened ? 'collapse in' : 'collapse'">
+			      <div class="panel-body">
+			      	<div data-ng-repeat="photo in album.photos"><a data-ng-click="clickPhoto(album._id, $index)">{{photo.name}}</a></div>
+			      </div>
+			    </div>
+			  </div>
+
+			</div>
+		</div>
+
+
+
+		<div class="col-lg-9">
+			<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+				<!--
+				<ol class="carousel-indicators">
+					<li data-ng-repeat="p in album.photos" data-ng-class="(p._id === photo._id) ? 'active' : ''" data-ng-click="clickPhoto(album._id, $index)">
+				</ol>
+			-->
+				<div class="carousel-inner">
+					<div class="carousel-img item" data-ng-repeat="p in album.photos" data-ng-class="(p._id === photo._id) ? 'active' : ''">
+					<img data-ng-src="{{p.filepath}}" ><p></p>
+					<!--
+					<div class="carousel-caption">
+					 {{p.description}}
+					</div>
+					-->
+				</div>
+				<a class="left carousel-control" data-ng-click="clickPhoto(album._id, prev)" data-slide="prev">
+					<span class="glyphicon glyphicon-chevron-left"></span>
+				</a>
+				<a class="right carousel-control" data-ng-click="clickPhoto(album._id, next)" data-slide="next">
+					<span class="glyphicon glyphicon-chevron-right"></span>
+				</a>				
+			</div>
+		</div>
+
+	</div>
+
 </div>

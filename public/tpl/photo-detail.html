@@ -64,9 +64,11 @@
                 <a class="btn" ng-click="pmSvc.deletePhoto(photo._id)" data-ng-disabled="!photo._id">Delete</a>        
             </div>
 
-            <div class="col-lg-8">
-                <div>
-                    <img id="image-detail" data-ng-src="{{photo.filepath}}"><p></p>             
+            <div class="col-lg-8" data-ng-if"photo.filepath !== ''">
+                <div class="well well-sm">
+                    <div class="detail-img" >
+                        <img data-ng-src="{{photo.filepath}}">
+                    </div>      
                 </div>
             </div>
 

@@ -22,11 +22,11 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', 'PhotoMgrService', 'album
 			fd.append('uploadfile', files[0]);
 			$scope.pmSvc.uploadFile(fd).then(function(res) {
 				$scope.photo.filepath = res.path;
-			})
+			});
 		}
 
 		$scope.pmSvc = PhotoMgrService;
-		$scope.view = view ? view : 'list';
+		$scope.view = view ? view : 'list'; //view = list if not set in route params
 		$scope.photo = photo;
 		$scope.photos = photos;
 		$scope.albums = albums;
@@ -83,6 +83,12 @@ photomgrControllers.controller('GalleryCtrl', ['$scope', 'albums', 'photos',
 
 		$scope.clickAlbum = function(i) { 
 			$scope.albums[i].opened = !$scope.albums[i].opened; 
+			//$scope.albums[i].opened = true; 
+			
+			//window._.each($scope.albums, function(album, index) {
+			//	if (index !== i) {$scope.albums[i].opened = false;}
+			//})
+
 		}
 
 		window._.each(albums, function(album) {
@@ -99,7 +105,7 @@ photomgrControllers.controller('GalleryCtrl', ['$scope', 'albums', 'photos',
 	}
 ]);
 
-//Pre-load Asynchronous data before route change 
+//Pre-load Album & Photo data before route change 
 PhotoMgrData = { 
 
 	album: function(Album, $route) {
@@ -122,37 +128,14 @@ PhotoMgrData = {
 		} else {
 			return Photo.query();
 		}
-
 	},
 
 	view: function($route) {
 		return $route.current.params.view;
 	}
-	/**, 
-
-	pmData: function($route, Photo, Album) {
-		var pmData = {};
-
-		if ($route.current.params.view === 'add') {
-			pmData.photos = '';
-		} else if ($route.current.params.albumId) {
-			pmData.photos = Album.getPhotos({id: $route.current.params.albumId});
-		} else {
-			pmData.photos = Photo.query();
-		}
-
-		pmData.photo = $route.current.params.photoId ? Photo.get({id: $route.current.params.photoId}) : new Photo();
-		pmData.album = $route.current.params.albumId ? Album.get({id: $route.current.params.albumId}) : new Album();
-		pmData.view = $route.current.params.view;
-
-		pmData.albums = Album.query();
-
-		return pmData;
-	}
-	**/
-
 };
 
+//Preload gallery data before the route change
 GalleryData = {
 	albums: function(Album) {
 		return Album.query().$promise;

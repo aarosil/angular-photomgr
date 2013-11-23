@@ -9,13 +9,13 @@
 
 		<div class="col-lg-3">
 			<div class="panel-group">
-			  <div class="panel panel-default" data-ng-repeat="album in albums| filter:{enabled: true}">
-			    <div class="panel-heading" data-ng-click="clickAlbum($index)">
-			    	<a><h4 class="panel-title">{{album.name}}</h4></a>
+			  <div class="panel panel-default" data-ng-repeat="a in albums| filter:{enabled: true}">
+			    <div class="panel-heading" data-ng-click="clickAlbum($index)" data-ng-class="(albums[$index]._id === album._id) ? 'active' : ''">
+			    	<a><h4 class="panel-title"><span class="glyphicon glyphicon-chevron-right" data-ng-show="(albums[$index]._id === album._id)"></span> {{a.name}}</h4></a>
 		    	</div>
-			    <div class="panel-collapse" data-ng-class="album.opened ? 'collapse in' : 'collapse'">
+			    <div class="panel-collapse" data-ng-class="a.opened ? 'collapse in' : 'collapse'">
 			      <div class="panel-body">
-			      	<div data-ng-repeat="photo in album.photos"><a data-ng-click="clickPhoto(album._id, $index)">{{photo.name}}</a></div>
+			      	<div data-ng-repeat="photo in a.photos"><a data-ng-click="clickPhoto(a._id, $index)">{{photo.name}}</a></div>
 			      </div>
 			    </div>
 			  </div>
@@ -25,36 +25,17 @@
 
 
 
-		<div class="col-lg-9">
-			<div class="well well-sm">
+	<div class="col-lg-9">
+
+		<div class="well well-sm">
 			<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
-				<!--
-				<ol class="carousel-indicators">
-					<li data-ng-repeat="p in album.photos" data-ng-class="(p._id === photo._id) ? 'active' : ''" data-ng-click="clickPhoto(album._id, $index)">
-				</ol>
-			-->
 				<div class="carousel-inner">
 					<div class="carousel-img item" data-ng-repeat="p in album.photos" data-ng-class="(p._id === photo._id) ? 'active' : ''">
-					<img data-ng-src="{{p.filepath}}" ><p></p>
-					<!--
-					<div class="carousel-caption">
-					 {{p.description}}
-					</div>
-					-->
+						<img data-ng-src="{{p.filepath}}">
+					</div>		
 				</div>
-				<!--
-				<a class="left carousel-control" data-ng-click="clickPhoto(album._id, prev)" data-slide="prev">
-					<span class="glyphicon glyphicon-chevron-left"></span>
-				</a>
-				<a class="right carousel-control" data-ng-click="clickPhoto(album._id, next)" data-slide="next">
-					<span class="glyphicon glyphicon-chevron-right"></span>
-				</a>	
-				-->			
+				<h4>{{photo.name}} : {{photo.description}}</h4>
 			</div>
-
-			<h4>{{photo.name}} : {{photo.description}}</h4>
-
-		</div>
 		</div>
 
 		<ul class="pagination">

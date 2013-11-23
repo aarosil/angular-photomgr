@@ -35,3 +35,11 @@ li .media {
   max-height: 520px;
   min-height: 520px;
 }
+.detail-img img{
+  max-height: 520px;
+  max-width: 100%;
+}
+
+.panel-heading.active .panel-title {
+	    font-weight: bold;
+}

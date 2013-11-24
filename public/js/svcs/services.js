@@ -24,67 +24,71 @@ photomgrServices.factory('Album', ['$resource',
 	}]);
 
 photomgrServices.factory('PhotoMgrService', ['Album', 'Photo',    
-    function(Album, Photo) {
+   function(Album, Photo) {
 
-    var pmSvc = {};
+   var pmSvc = {};
     
-    pmSvc.getAlbum = function (id) {
-        return Album.get({id: id}, function(data) {
-            return data;
-        }); 
-    }    
+   pmSvc.getAlbum = function (id) {
+      return Album.get({id: id}, function(data) {
+         return data;
+      }); 
+   }    
 
-    pmSvc.getPhoto = function(id) {
-        return Photo.get({id: id}, function(data) {
-            return data;
-        });
-    }
+   pmSvc.getPhoto = function(id) {
+      return Photo.get({id: id}, function(data) {
+         return data;
+      });
+   }
 
-    pmSvc.saveAlbum = function(album) {
-        return Album.save({}, album, function(data) {
-            return data;
-        });
-    }
+   pmSvc.saveAlbum = function(album) {
+      return Album.save({}, album, function(data) {
+         return data;
+      });
+   }
 
-    pmSvc.savePhoto = function (photo) {
-        return Photo.save({}, photo, function(data) {
-            return data; 
-        });
-    }
+   pmSvc.savePhoto = function (photo) {
+      return Photo.save({}, photo, function(data) {
+         return data; 
+      });
+   }
 
-    pmSvc.deleteAlbum = function (id) {
-        return Album.delete({id: id});
-    }
+   pmSvc.deleteAlbum = function (album) {
+      return Album.delete({}, album, function(data) {
+         return data;
+      });
+   }
 
-    pmSvc.deletePhoto = function (id) {
-        return Photo.delete({id: id});
-    }
+   pmSvc.deletePhoto = function (photo) {
+      return Photo.delete({}, photo, function(data) {
+         return data;
+      });
+   }
 
-    pmSvc.toggleEnabled = function(id) {
-        return Album.get({id: id}, function(album) {
-            album.enabled = (!album.enabled) 
-            album.$save();
-        });
-    }
+   pmSvc.toggleEnabled = function(id) {
+      return Album.get({id: id}, function(album) {
+         album.enabled = (!album.enabled) 
+         album.$save();
+      });
+   }
 
-    pmSvc.getAlbumPhotos = function(id) {
-        return Album.getPhotos({id: id}, function(data) {
-            return data;
-        });
-    }
+   pmSvc.getAlbumPhotos = function(id) {
+      return Album.getPhotos({id: id}, function(data) {
+         return data;
+      });
+   }
 
-    pmSvc.newAlbum = function () {
-        return new Album();
-    }
+   pmSvc.newAlbum = function () {
+      return new Album();
+   }
     
-    pmSvc.newPhoto = function () {
-        return new Photo();
-    }
+   pmSvc.newPhoto = function () {
+      return new Photo();
+   }
 
-    pmSvc.uploadFile = function (formData) {
-        return Photo.uploadPhoto({}, formData).$promise;
-    }
+   pmSvc.uploadFile = function (formData) {
+      return Photo.uploadPhoto({}, formData).$promise;
+   }
     
-    return pmSvc;
+   return pmSvc;
 
 }]);

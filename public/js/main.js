@@ -1,7 +1,8 @@
 var photomgrApp = angular.module('photomgrApp', [
 		'ngRoute',
 		'photomgrControllers',
-		'photomgrServices'
+		'photomgrServices',
+		'ui.sortable'
 	]);
 
 photomgrApp.config(['$routeProvider',

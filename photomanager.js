@@ -33,7 +33,7 @@ exports.findAllPhotos = function(req,res) {
 exports.findAllAlbums = function(req, res) {
 	mongodb.MongoClient.connect(mongoUri, function (err, db) {
 		db.collection('albums', function(err, collection) {
-			collection.find().toArray(function(err,items) {
+			collection.find().sort({order: 1}).toArray(function(err,items) {
 				if (items) {
 					res.send(items);		
 				} else {

@@ -23,7 +23,7 @@
             <td>{{photo.album}}</td>
             <td>{{photo.description}}</td>
             <td style="text-align: center"><a href="#/photos/detail/{{photo._id}}"><span class="glyphicon glyphicon-cog" title="Photo Details"></td>
-            <td style="text-align: center"><a data-ng-click="pmSvc.deletePhoto(photo._id)"><span class="glyphicon glyphicon-remove" title="Delete Photo"></td>
+            <td style="text-align: center"><a href="" data-ng-click="deletePhoto(photo)"><span class="glyphicon glyphicon-remove" title="Delete Photo"></td>
           </tr>
         </tbody>
       </table>

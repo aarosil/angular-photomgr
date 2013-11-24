@@ -23,7 +23,13 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', 'PhotoMgrService', 'album
 			$scope.pmSvc.uploadFile(fd).then(function(res) {
 				$scope.photo.filepath = res.path;
 			});
-		}
+		};
+
+		$scope.deletePhoto = function(photo) {
+			$scope.pmSvc.deletePhoto(window._.findWhere($scope.photos, {_id: photo._id})).then( function(){
+				$scope.photos.splice(window._.indexOf($scope.photos, photo), 1); //remove from list
+			});
+		};		
 
 		$scope.pmSvc = PhotoMgrService;
 		$scope.view = view ? view : 'list'; //view = list if not set in route params
@@ -31,7 +37,7 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', 'PhotoMgrService', 'album
 		$scope.photos = photos;
 		$scope.albums = albums;
 		$scope.pmSvc.filter = '';
-		$scope.section = {'name': 'Photo', 'url':'/photos'}; //used to set links in subnav.html
+		$scope.section = {'name': 'Photo', 'url':'/photos'}; //used in subnav.html
 	}
 ]);
 
@@ -59,18 +65,42 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 			});
 		};
 
+		$scope.deleteAlbum = function(album) {
+			$scope.pmSvc.deleteAlbum(window._.findWhere($scope.albums, {_id: album._id})).then( function(){
+				$scope.albums.splice(window._.indexOf($scope.albums, album), 1); //remove from list
+			});
+		};
+
+		$scope.reorderAlbums = function (event, ui) {
+			//console.log(event, ui);
+			console.log(window._.pluck($scope.albums, 'name'));
+		}
+
 		$scope.pmSvc = PhotoMgrService;
-		$scope.view = view ? view : 'list'; //view = list if not set in route params
+		$scope.view = view ? view : 'list'; //if view not set in route params,view = album-list
 		$scope.album = album;
 		$scope.photos = photos;
 		$scope.newAlbum = $scope.pmSvc.newAlbum()
 		$scope.albums = albums;
 		$scope.pmSvc.filter = '';
 
-		$scope.section = {'name': 'Album', 'url':'/albums'}; //used to set links in subnav.html
+		$scope.section = {'name': 'Album', 'url':'/albums'}; //used in subnav.html
 
 		if ($scope.photos.length > 0) {$scope.clickPhoto($scope.photos[0]);}	
 		$scope.coverPic = window._.findWhere(photos, {_id: $scope.album.coverPic});
+
+		$( ".album-list-table" ).sortable({
+			cancel: ".add-new-album",
+			items: ".sortable"
+		});
+		$( ".album-list-table").on("sortupdate", function (event, ui) {
+	        $( ".album-list-table").children('.sortable').each(function(index) {
+	            // get old item index
+	            var oldIndex = parseInt($(this).attr("data-ng-album-order"), 10);
+	            $scope.albums[oldIndex].order = index;
+	            $scope.pmSvc.saveAlbum($scope.albums[oldIndex]);
+        	});
+		})
 	}
 ]);
 

@@ -9,7 +9,7 @@
 
 		<div class="col-lg-3">
 			<div class="panel-group">
-			  <div class="panel panel-default" data-ng-repeat="a in albums| filter:{enabled: true}">
+			  <div class="panel panel-default" data-ng-repeat="a in albums| filter:{enabled: true}|orderBy:'a.order'">
 			    <div class="panel-heading" data-ng-click="clickAlbum($index)" data-ng-class="(albums[$index]._id === album._id) ? 'active' : ''">
 			    	<a><h4 class="panel-title"><span class="glyphicon glyphicon-chevron-right" data-ng-show="(albums[$index]._id === album._id)"></span> {{a.name}}</h4></a>
 		    	</div>

@@ -42,6 +42,11 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 			$scope.photo = p;
 		};
 
+		$scope.clickEnabled = function(index) {
+			$scope.albums[index].enabled = !$scope.albums[index].enabled;
+			$scope.pmSvc.saveAlbum($scope.albums[index]);
+		}
+
 		$scope.setCoverPic = function(p) { //used by select to set photoId and path of the album's cover photo
 			$scope.album.coverPicPath = p.filepath;
 			$scope.album.coverPic = p._id;
@@ -55,7 +60,7 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 		};
 
 		$scope.pmSvc = PhotoMgrService;
-		$scope.view = view ? view : 'list';
+		$scope.view = view ? view : 'list'; //view = list if not set in route params
 		$scope.album = album;
 		$scope.photos = photos;
 		$scope.newAlbum = $scope.pmSvc.newAlbum()

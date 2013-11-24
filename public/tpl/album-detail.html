@@ -69,7 +69,7 @@
                 <a data-ng-repeat="item in photos |filter:searchText" 
                     class="list-group-item ng-class:(item._id === photo._id)? 'active' : '';"
                     data-ng-click="clickPhoto(item)">
-                    {{item.name}}
+                    {{item.name}}<span class="glyphicon glyphicon-remove pull-right"></span>
                 </a> 
             </div>     
         </div>

@@ -10,22 +10,6 @@ body {
 .albumgrid-thumbnail {
 	margin-bottom: 30px;
 }
-#image-detail {
-	border: 1px solid #ddd;
-	padding: 4px;
-	height: 440px;
-}
-#album-thumbnails {
-	background-color: e7e7e7; 
-	height: 450px;
-}
-ul#album-thumbnails.media-list {
-	background-color: e7e7e7; 
-}
-li .media {
-	background-color: e7e7e7; 	
-	font-size: 10;
-}
 .footer {
     margin-top:15px;
     font-weight: bold;
@@ -38,6 +22,10 @@ li .media {
 .detail-img img{
   max-height: 520px;
   max-width: 100%;
+}
+
+.album-enabled span.disabled{
+	color: #CCCCCC;
 }
 
 .panel-heading.active .panel-title {

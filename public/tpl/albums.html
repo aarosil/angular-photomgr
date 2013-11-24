@@ -1,5 +1,4 @@
 <div class="container">
-  
   <h3 class="section-header">Albums</h3>
         
   <div class="row">
@@ -20,10 +19,16 @@
             </tr>
 -->
             <!-- one row per album --> 
-            <tr data-ng-repeat="album in albums | filter:pmSvc.filter" data-ng-model="albums" data-ng-class="(($index % 2) !== 0) ? 'table-striped': ''">
+            <tr data-ng-repeat="album in albums | filter:pmSvc.filter" data-ng-model="albums" >
               <td><a href="#/albums/detail/{{album._id}}">{{album.name}}</a></td>
               <td>{{album.description}}</td>
-              <td><input type="checkbox" data-ng-checked="album.enabled" data-ng-click="pmSvc.toggleEnabled(album._id)"></td> 
+              <!--<td style="text-align: center"><input type="checkbox" data-ng-checked="album.enabled" data-ng-click="pmSvc.toggleEnabled(album._id)"></td>  -->
+              <td style="text-align: center" class="album-enabled">
+                <a href="" data-ng-click="clickEnabled($index)">
+                <span data-ng-class="(album.enabled) ? 'enabled' : 'disabled'" class="glyphicon glyphicon-film" data-ng-checked="album.enabled"/></a>
+              </td>
+              <td style="text-align: center"><a href="#/albums/detail/{{album._id}}"><span class="glyphicon glyphicon-cog"/></a></td>
+              <td style="text-align: center"><a data-ng-click="pmSvc.deleteAlbum(album._id)"><span class="glyphicon glyphicon-remove"/></a></td>
             </tr>
 
             <!-- row for add new album form--> 
@@ -31,11 +36,13 @@
               <td><input data-ng-model="newAlbum.name" type="text" class="form-control" placeholder="New album"></td>
               <td><input data-ng-model="newAlbum.description" type="text" class="form-control" placeholder="Description"></td>
               <td><input data-ng-model="newAlbum.enabled" type="checkbox"> </td>    
+              <td><span> </span></td>
+              <td><span> </span></td>              
             </tr>
 
             <!-- buttons -->
             <tr>
-              <td colspan="3"><a class="btn btn-primary" ng-click="saveAlbum(newAlbum)" data-ng-disabled="!newAlbum.name">Save New</a></td>
+              <td colspan="5"><a class="btn btn-primary" ng-click="saveAlbum(newAlbum)" data-ng-disabled="!newAlbum.name">Save New</a></td>
             </tr>
 
           </tbody>

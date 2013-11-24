@@ -29,5 +29,9 @@ body {
 }
 
 .panel-heading.active .panel-title {
-	    font-weight: bold;
+	font-weight: bold;
+}
+
+.gallery-photo-name .active {
+	font-weight: bold;
 }

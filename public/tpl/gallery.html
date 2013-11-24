@@ -14,8 +14,10 @@
 			    	<a><h4 class="panel-title"><span class="glyphicon glyphicon-chevron-right" data-ng-show="(albums[$index]._id === album._id)"></span> {{a.name}}</h4></a>
 		    	</div>
 			    <div class="panel-collapse" data-ng-class="a.opened ? 'collapse in' : 'collapse'">
-			      <div class="panel-body">
-			      	<div data-ng-repeat="photo in a.photos"><a data-ng-click="clickPhoto(a._id, $index)">{{photo.name}}</a></div>
+			      <div class="panel-body gallery-photo-name">
+			      	<div data-ng-repeat="p in a.photos" data-ng-class="(p._id === photo._id) ? 'active' : ''">
+			      		<a data-ng-click="clickPhoto(a._id, $index)">{{p.name}}</a>
+			      	</div>
 			      </div>
 			    </div>
 			  </div>
@@ -26,7 +28,6 @@
 
 
 	<div class="col-lg-9">
-
 		<div class="well well-sm">
 			<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
 				<div class="carousel-inner">

@@ -25,10 +25,19 @@
               <!--<td style="text-align: center"><input type="checkbox" data-ng-checked="album.enabled" data-ng-click="pmSvc.toggleEnabled(album._id)"></td>  -->
               <td style="text-align: center" class="album-enabled">
                 <a href="" data-ng-click="clickEnabled($index)">
-                <span data-ng-class="(album.enabled) ? 'enabled' : 'disabled'" class="glyphicon glyphicon-film" data-ng-checked="album.enabled"/></a>
+                  <span data-ng-class="(album.enabled) ? 'enabled' : 'disabled'" title="Show/Hide Album in gallery" class="album-enabled glyphicon glyphicon-film"/>
+                </a>
               </td>
-              <td style="text-align: center"><a href="#/albums/detail/{{album._id}}"><span class="glyphicon glyphicon-cog"/></a></td>
-              <td style="text-align: center"><a data-ng-click="pmSvc.deleteAlbum(album._id)"><span class="glyphicon glyphicon-remove"/></a></td>
+              <td style="text-align: center" >
+                <a href="#/albums/detail/{{album._id}}">
+                  <span class="glyphicon glyphicon-cog" title="Album Details"/>
+                </a>
+              </td>
+              <td style="text-align: center">
+                <a href="" data-ng-click="pmSvc.deleteAlbum(album._id)">
+                  <span class="glyphicon glyphicon-remove" title="Delete Album"/>
+                </a>
+              </td>
             </tr>
 
             <!-- row for add new album form--> 

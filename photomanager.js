@@ -92,6 +92,7 @@ exports.addAlbum = function(req, res) {
 		db.collection('albums', function (err, collection) {
 			collection.find().count(function (e, count) {
 				album.order = count; //update album object w/ order # before saving
+				console.log(album);
 			});
 			collection.insert(album, {safe:true}, function(err, result) {
 				if (err) {

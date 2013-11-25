@@ -60,6 +60,7 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 
 		$scope.saveAlbum = function (album) {
 			$scope.pmSvc.saveAlbum(album).then( function(data) {
+				console.log(data);
 				$scope.albums.push(data); //add new album to list &  clear form
 				$scope.newAlbum = $scope.pmSvc.newAlbum();				
 			});
@@ -70,11 +71,6 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 				$scope.albums.splice(window._.indexOf($scope.albums, album), 1); //remove from list
 			});
 		};
-
-		$scope.reorderAlbums = function (event, ui) {
-			//console.log(event, ui);
-			console.log(window._.pluck($scope.albums, 'name'));
-		}
 
 		$scope.pmSvc = PhotoMgrService;
 		$scope.view = view ? view : 'list'; //if view not set in route params,view = album-list
@@ -93,14 +89,15 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 			cancel: ".add-new-album",
 			items: ".sortable"
 		});
-		$( ".album-list-table").on("sortupdate", function (event, ui) {
+
+		$( ".album-list-table").on("sortupdate", function () {
 	        $( ".album-list-table").children('.sortable').each(function(index) {
 	            // get old item index
 	            var oldIndex = parseInt($(this).attr("data-ng-album-order"), 10);
 	            $scope.albums[oldIndex].order = index;
 	            $scope.pmSvc.saveAlbum($scope.albums[oldIndex]);
         	});
-		})
+		});
 	}
 ]);
 
@@ -111,19 +108,13 @@ photomgrControllers.controller('GalleryCtrl', ['$scope', 'albums', 'photos',
 			if (albumID !== $scope.album._id) {
 				$scope.album = window._.findWhere(albums, {_id: albumID})
 			}
+			$scope.prev = (index - 1) < 0 ? $scope.album.photos.length - 1: index - 1;
+			$scope.next = (index + 1) % $scope.album.photos.length;
 			$scope.photo = $scope.album.photos[index];
-			$scope.prev = Math.max(index-1, 0);
-			$scope.next = Math.min(index+1, $scope.album.photos.length-1);
 		}
 
 		$scope.clickAlbum = function(i) { 
 			$scope.albums[i].opened = !$scope.albums[i].opened; 
-			//$scope.albums[i].opened = true; 
-			
-			//window._.each($scope.albums, function(album, index) {
-			//	if (index !== i) {$scope.albums[i].opened = false;}
-			//})
-
 		}
 
 		window._.each(albums, function(album) {
@@ -134,7 +125,7 @@ photomgrControllers.controller('GalleryCtrl', ['$scope', 'albums', 'photos',
 		$scope.album = $scope.albums[0];
 		$scope.album.opened = true;
 		$scope.photo  = $scope.album.photos[0];
-		$scope.prev = 0; 
+		$scope.prev = $scope.album.photos.length - 1; 
 		$scope.next = 1;
 
 	}

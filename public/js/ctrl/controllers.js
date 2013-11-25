@@ -131,7 +131,7 @@ photomgrControllers.controller('GalleryCtrl', ['$scope', 'albums', 'photos',
 	}
 ]);
 
-//Pre-load Album & Photo data before route change 
+//To Pre-load Album & Photo data before route change 
 PhotoMgrData = { 
 
 	album: function(Album, $route) {

@@ -12,7 +12,7 @@
 
           <!--Row per album  -->
           <tr data-ng-repeat="album in albums | filter:pmSvc.filter" data-ng-model="album" class="sortable" data-ng-album-order="{{$index}}">
-            <td><a href="#/albums/detail/{{album._id}}">{{album.order}} {{album.name}}</a></td>
+            <td><a href="#/albums/detail/{{album._id}}">{{album.name}}</a></td>
             <td>{{album.description}}</td>
             <td style="text-align: center" class="album-enabled">
               <a href="" data-ng-click="clickEnabled($index)">

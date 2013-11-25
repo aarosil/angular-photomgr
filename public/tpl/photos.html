@@ -9,7 +9,7 @@
     <div class="col-lg-12">
       <table id="photo-list" class="table table-striped">
         <tbody>  
-          <!--
+
           <tr>
             <th>Name</th>
             <th>Album</th>
@@ -17,7 +17,7 @@
             <th style="text-align: center">Edit</th>
             <th style="text-align: center">Delete</th>            
           </tr>
-        -->
+
           <tr data-ng-repeat="photo in photos| filter:pmSvc.filter">
             <td><a href="#/photos/detail/{{photo._id}}">{{photo.name}}</a></td>
             <td>{{photo.album}}</td>

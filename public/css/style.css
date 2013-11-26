@@ -2,6 +2,7 @@ body {
 	padding-top: 70px;
 	padding-bottom: 70px;
 }
+
 .section-header {
 	margin-top: 0px;
 	margin-bottom: 10px;
@@ -10,18 +11,25 @@ body {
 .albumgrid-thumbnail {
 	margin-bottom: 30px;
 }
+
 .footer {
-    margin-top:15px;
-    font-weight: bold;
+  margin-top:15px;
+  font-weight: bold;
 }
+
 .carousel-img img{
   width: auto;
   max-height: 520px;
   min-height: 520px;
 }
+
 .detail-img img{
   max-height: 520px;
   max-width: 100%;
+}
+
+.homepage-img img{
+	max-height: 300px;
 }
 
 .album-enabled span.disabled{

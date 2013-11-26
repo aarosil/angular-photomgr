@@ -10,7 +10,8 @@ photomgrApp.config(['$routeProvider',
 		$routeProvider.
 			when('/', {
 				templateUrl: 'tpl/home.html',
-				controller: 'HomeCtrl'
+				controller: 'HomeCtrl',
+				resolve: HomeData
 			}).
 			when('/about', {
 				templateUrl: 'tpl/about.html'

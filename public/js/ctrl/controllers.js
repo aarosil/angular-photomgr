@@ -1,8 +1,10 @@
 var photomgrControllers = angular.module('photomgrControllers', []);
 
-photomgrControllers.controller('HomeCtrl', ['$scope', 
-	function($scope) {
+photomgrControllers.controller('HomeCtrl', ['$scope', 'photos',
+	function($scope, photos) {
 		$scope.homeMsg = "PhotoManager lets you upload photos and create galleries of your favorite pics!";
+		var rd = Math.floor(Math.random()*(photos.length))
+		$scope.randomPhoto = photos[rd];
 	}
 ]);
 
@@ -170,4 +172,10 @@ GalleryData = {
 	photos: function(Photo, $route) {
 		return $route.current.params.albumId ? Album.getPhotos({id: $route.current.params.albumId}).$promise : Photo.query().$promise;
 	}
-}
+};
+
+HomeData = {
+	photos: function(Photo) {
+		return Photo.query().$promise;
+	}
+};

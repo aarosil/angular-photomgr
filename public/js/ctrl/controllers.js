@@ -3,7 +3,7 @@ var photomgrControllers = angular.module('photomgrControllers', []);
 photomgrControllers.controller('HomeCtrl', ['$scope', 'photos',
 	function($scope, photos) {
 		$scope.homeMsg = "PhotoManager lets you upload photos and create galleries of your favorite pics!";
-		var rd = Math.floor(Math.random()*(photos.length))
+		var rd = Math.floor(Math.random()*(photos.length + 1))
 		$scope.randomPhoto = photos[rd];
 	}
 ]);
@@ -61,6 +61,7 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 		};
 
 		$scope.saveAlbum = function (album) {
+			if (!album._id) {album.order = albums.length} // set order # to next if album is new
 			$scope.pmSvc.saveAlbum(album).then( function(data) {
 				console.log(data);
 				$scope.albums.push(data); //add new album to list &  clear form
@@ -75,7 +76,7 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 		};
 
 		$scope.pmSvc = PhotoMgrService;
-		$scope.view = view ? view : 'list'; //if view not set in route params,view = album-list
+		$scope.view = view ? view : 'list'; //if view not set in route params,view = list
 		$scope.album = album;
 		$scope.photos = photos;
 		$scope.newAlbum = $scope.pmSvc.newAlbum()

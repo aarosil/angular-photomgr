@@ -90,10 +90,6 @@ exports.addAlbum = function(req, res) {
 	console.log('Adding album: ' + JSON.stringify(album));
 	mongodb.MongoClient.connect(mongoUri, function (err, db) {
 		db.collection('albums', function (err, collection) {
-			collection.find().count(function (e, count) {
-				album.order = count; //update album object w/ order # before saving
-				console.log(album);
-			});
 			collection.insert(album, {safe:true}, function(err, result) {
 				if (err) {
 					res.send({'error':'An error has occurred'});

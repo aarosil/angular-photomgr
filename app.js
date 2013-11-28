@@ -27,7 +27,7 @@ if ('development' == app.get('env')) {
  * Assign Routes.
  */
 /** File upload from user **/
-app.post('/upload', pm.uploadPhoto);
+app.post('/upload', pm.uploadPhotoAWS);
 /** File C.R.U.D. **/
 app.post('/photos', pm.addPhoto);
 app.get('/photos', pm.findAllPhotos);

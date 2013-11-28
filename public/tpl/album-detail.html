@@ -63,9 +63,9 @@
         <div class="col-lg-2">     
             <input class="form-control input-sm" type="text" ng-model="searchText" placeholder="Search photos"></input>
             <p>
-            <div class="album list-group" ui-sortable="">
+            <div class="album list-group" ui-sortable="" data-ng-model="photos">
                 <a data-ng-repeat="item in photos |filter:searchText" 
-                    class="list-group-item ng-class:(item._id === photo._id)? 'active' : '';"
+                    class="list-group-item" data-ng-class="(item._id === photo._id)? 'active' : '';"
                     data-ng-click="clickPhoto(item)">
                     {{item.name}} <!-- <span class="glyphicon glyphicon-remove pull-right"></span> -->
                 </a> 

@@ -2,6 +2,9 @@ var mongodb = require('mongodb');
 var BSON = require('mongodb').BSONPure;
 var ObjectID = require('mongodb').ObjectID;
 
+var AWS = require('aws-sdk');
+AWS.config.update({region: 'us-east-1'});
+
 var mongoUri = process.env.MONGOLAB_URI || 'mongodb://user:pass@localhost:27017/ng-photomanager-db';
 
 mongodb.MongoClient.connect(mongoUri, function (err, db) {
@@ -214,3 +217,35 @@ exports.uploadPhoto = function(req, res) {
 	});
 };
 
+exports.uploadPhotoAWS = function (req, res) { 
+	
+	var bucket = 'young-badlands-8496';
+
+	var uploadfile = req.files.uploadfile.path;
+	var name = 'img/' + req.files.uploadfile.name;
+
+	require('fs').stat(uploadfile, function(err, file_info) {
+
+	    var bodyStream = fs.createReadStream(uploadfile);
+
+	    var params = {
+	    	ACL			: 'public-read',
+	        Bucket    	: bucket,
+	        Key			: name,
+	        ContentLength : file_info.size,
+	        Body          : bodyStream
+	    };
+
+	    s3bucket = new AWS.S3({params: {Bucket: bucket}});
+
+	    s3bucket.putObject(params, function(err, data) {
+	        if(err){
+	        	console.log(err);
+	        } else {
+	        	res.send({path: 'http://young-badlands-8496.s3-website-us-east-1.amazonaws.com/' + name})	
+	        }
+	    	
+	    });
+
+	});	
+}

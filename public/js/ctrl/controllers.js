@@ -3,7 +3,7 @@ var photomgrControllers = angular.module('photomgrControllers', []);
 photomgrControllers.controller('HomeCtrl', ['$scope', 'photos',
 	function($scope, photos) {
 		$scope.homeMsg = "PhotoManager lets you upload photos and create galleries of your favorite pics!";
-		var rd = Math.floor(Math.random()*(photos.length + 1))
+		var rd = Math.floor(Math.random()*(photos.length))
 		$scope.randomPhoto = photos[rd];
 	}
 ]);
@@ -72,7 +72,19 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 		$scope.deleteAlbum = function(album) {
 			$scope.pmSvc.deleteAlbum(window._.findWhere($scope.albums, {_id: album._id})).then( function(){
 				$scope.albums.splice(window._.indexOf($scope.albums, album), 1); //remove from list
+				reNumberAlbums();
 			});
+		};
+
+		var reNumberAlbums = function () {
+	        $( ".album-list-table").children('.sortable').each(function(index) {
+	            // get old item index
+	            var oldIndex = parseInt($(this).attr("data-ng-album-order"), 10);
+	            if ($scope.albums[oldIndex]) {
+	            	$scope.albums[oldIndex].order = index;
+	            	$scope.pmSvc.saveAlbum($scope.albums[oldIndex]);
+	            }
+        	});			
 		};
 
 		$scope.pmSvc = PhotoMgrService;
@@ -88,19 +100,16 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 		if ($scope.photos.length > 0) {$scope.clickPhoto($scope.photos[0]);}	
 		$scope.coverPic = window._.findWhere(photos, {_id: $scope.album.coverPic});
 
+		
+		//configure sortable list element
 		$( ".album-list-table" ).sortable({
-			cancel: ".add-new-album",
-			items: ".sortable"
+			cancel: ".nonsortable",
+			items: ".sortable",
+		});
+		$( ".album-list-table").on("sortupdate", function () {
+			reNumberAlbums();
 		});
 
-		$( ".album-list-table").on("sortupdate", function () {
-	        $( ".album-list-table").children('.sortable').each(function(index) {
-	            // get old item index
-	            var oldIndex = parseInt($(this).attr("data-ng-album-order"), 10);
-	            $scope.albums[oldIndex].order = index;
-	            $scope.pmSvc.saveAlbum($scope.albums[oldIndex]);
-        	});
-		});
 	}
 ]);
 
@@ -164,7 +173,7 @@ PhotoMgrData = {
 	}
 };
 
-//Preload gallery data before the route change
+//Preload all photos and albums 
 GalleryData = {
 	albums: function(Album) {
 		return Album.query().$promise;

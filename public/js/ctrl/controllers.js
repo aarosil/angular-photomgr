@@ -3,8 +3,7 @@ var photomgrControllers = angular.module('photomgrControllers', []);
 photomgrControllers.controller('HomeCtrl', ['$scope', 'photos',
 	function($scope, photos) {
 		$scope.homeMsg = "PhotoManager lets you upload photos and create galleries of your favorite pics!";
-		var rd = Math.floor(Math.random()*(photos.length))
-		$scope.randomPhoto = photos[rd];
+		$scope.randomPhoto = window._.sample(photos);
 	}
 ]);
 
@@ -112,6 +111,12 @@ photomgrControllers.controller('AlbumCtrl', [ '$scope', 'PhotoMgrService', 'albu
 
 	}
 ]);
+
+photomgrControllers.controller('AlbumDetailCtrl', ['$scope', 'PhotoMgrService', 'album', 'photos', 
+	function($scope, PhotoMgrService, albums, photos) {
+
+	}
+])
 
 photomgrControllers.controller('GalleryCtrl', ['$scope', 'albums', 'photos',
 	function($scope, albums, photos) {

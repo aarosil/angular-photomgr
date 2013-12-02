@@ -2,7 +2,8 @@ var photomgrApp = angular.module('photomgrApp', [
 		'ngRoute',
 		'photomgrControllers',
 		'photomgrServices',
-		'ui.sortable'
+		'ui.sortable',
+		'ui.bootstrap'
 	]);
 
 photomgrApp.config(['$routeProvider',
@@ -46,7 +47,7 @@ photomgrApp.config(['$routeProvider',
 				resolve: PhotoMgrData
 			}).
 			when('/albums/:view/:albumId', {
-				templateUrl:'tpl/albums.html',
+				templateUrl:'tpl/album-detail.html',
 				controller: 'AlbumCtrl', 
 				resolve: PhotoMgrData
 			}).

@@ -12,7 +12,7 @@
 
           <tr>
             <th>Name</th>
-            <th>Album</th>
+            <th>Albums</th>
             <th>Description</th>
             <th style="text-align: center">Edit</th>
             <th style="text-align: center">Delete</th>            
@@ -20,7 +20,11 @@
 
           <tr data-ng-repeat="photo in photos| filter:pmSvc.filter">
             <td><a href="#/photos/detail/{{photo._id}}">{{photo.name}}</a></td>
-            <td>{{photo.album}}</td>
+            <td>
+              <span data-ng-repeat="album in photo.albumNames">
+                <span data-ng-hide="$index === 0">,</span><a href="#/albums/detail/{{album._id}}">{{album.name}}</a>
+              </span>
+            </td>                 
             <td>{{photo.description}}</td>
             <td style="text-align: center"><a href="#/photos/detail/{{photo._id}}"><span class="glyphicon glyphicon-cog" title="Photo Details"></td>
             <td style="text-align: center"><a href="" data-ng-click="deletePhoto(photo)"><span class="glyphicon glyphicon-trash" title="Delete Photo"></td>

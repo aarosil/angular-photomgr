@@ -43,3 +43,13 @@ body {
 .gallery-photo-name .active {
 	font-weight: bold;
 }
+
+.list-group-item.active button.btn {
+	color: #FFFFFF;
+
+}
+
+.list-group-item.active a {
+	color: #FFFFFF;
+
+}

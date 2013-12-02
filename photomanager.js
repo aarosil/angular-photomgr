@@ -52,7 +52,8 @@ exports.findAllPhotosInAlbum = function(req, res) {
 	var id = req.params.id;
 	mongodb.MongoClient.connect(mongoUri, function (err, db) {
 		db.collection('photos', function(err, collection) {
-			collection.find({'album': id}).toArray(function(err,items) {
+			//collection.find({'album': id}).toArray(function(err,items) {
+			collection.find({'albums': {$in: [id]}}).toArray(function(err,items) {
 				res.send(items);
 			});
 		});
@@ -87,6 +88,31 @@ exports.findAlbumName = function(req, res) {
 		});
 	});
 };
+
+/**
+exports.findAlbumName = function(req, res) {
+	var id = req.params.id;
+	console.log("Lookup AlbumID: " + id);
+	mongodb.MongoClient.connect(mongoUri, function (err, db) {
+		db.collection('albums', function(err, collection) {
+			collection.findOne({'_id':new BSON.ObjectID(id)}, function(err, album) {
+				if (err) {
+					console.log(err);
+					res.send(err);
+				} else {
+					db.collection('photos', function(err, collection){
+						collection.find({'albums': {$in: [id]}}).toArray(function(err, photos){				
+							album.photos = photos;						
+							console.log(album);
+							res.send(album);
+						});
+					});
+				}				
+			});
+		});
+	});
+};
+**/
 
 exports.addAlbum = function(req, res) { 
 	var album = req.body;

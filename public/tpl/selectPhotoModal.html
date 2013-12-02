@@ -1,0 +1,13 @@
+<div class="modal-header">
+	<h4>Select Photo to Add:</h4>
+</div>
+<div class="modal-body">
+	<div class="form-group">
+		<input type="text" class="form-control" placeholder="Search photos" data-ng-model="filter"/>
+	</div>
+	<ul class="list-group">
+		<a href="" data-ng-click="ok(p)" data-ng-repeat="p in photos|filter:filter">
+			<li class="list-group-item">{{p.name}}</li>
+		</a>
+	</ul>
+</div>

@@ -31,7 +31,7 @@
                     <div class="col-lg-8">                
                     <select 
                         class="form-control input-sm" data-ng-model="coverPic" data-ng-change="setCoverPic(coverPic)"
-                        data-ng-options="f as f.name for f in photos">
+                        data-ng-options="f as f.name for f in displayPhotos">
                     </select>
                     </div>
                 </div>
@@ -55,8 +55,8 @@
 
             </form>
 
-            <a class="btn btn-primary" ng-click="saveAlbum(album)" data-ng-disabled="!album.name">Save</a>
-            <a class="btn btn-default" ng-click="deleteAlbum(album)" data-ng-disabled="!album._id">Delete</a>
+            <a class="btn btn-primary" ng-click="saveAlbum(album, true)" data-ng-disabled="!album.name">Save</a>
+            <a class="btn btn-default" ng-click="deleteAlbum(album, true)" data-ng-disabled="!album._id">Delete</a>
         </div>
 
         <div >

@@ -33,6 +33,22 @@ photomgrControllers.controller('modalInstanceCtrl', ['$scope', '$modalInstance',
 	}
 ]);
 
+photomgrControllers.controller('deleteAlbumModalCtrl', ['$scope', '$modalInstance', 'album',
+	function($scope, $modalInstance, album) {
+
+		$scope.album = album;
+
+		$scope.ok = function (result) {
+			$modalInstance.close(result);
+		};
+
+		$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};		
+	}
+]);
+
+
 photomgrControllers.controller('PhotoCtrl', ['$scope', '$modal', 'Util', 'PhotoMgrService', 'albums', 'photos', 'photo', 'view',
 	function($scope, $modal, Util, PhotoMgrService, albums, photos, photo, view	) {
 
@@ -90,6 +106,7 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$modal', 'Util', 'PhotoM
 			window._.each(photos, function(photo) {
 				var a = [];
 				window._.each(photo.albums, function(album) {
+
 					var b = window._.findWhere(albums, {_id: album});
 					a.push({_id: b._id, name: b.name});
 				});
@@ -109,8 +126,8 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$modal', 'Util', 'PhotoM
 	}
 ]);
 
-photomgrControllers.controller('AlbumCtrl', ['$scope', '$modal', 'Util', 'PhotoMgrService', 'album', 'albums', 'photo', 'photos', 'view',
-	function($scope, $modal, Util, PhotoMgrService, album, albums, photo, photos, view) {
+photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'Util', 'PhotoMgrService', 'album', 'albums', 'photo', 'photos', 'view',
+	function($location, $scope, $modal, Util, PhotoMgrService, album, albums, photo, photos, view) {
 
 		$scope.clickPhoto = function(p) {
 			$scope.displayPhoto = p;
@@ -135,11 +152,45 @@ photomgrControllers.controller('AlbumCtrl', ['$scope', '$modal', 'Util', 'PhotoM
 			});
 		};
 
-		$scope.deleteAlbum = function(album) {
-			$scope.pmSvc.deleteAlbum(album).then( function(){
-				$scope.albums.splice(window._.indexOf($scope.albums, album), 1); //remove from list
-				reNumberAlbums();
+		$scope.deleteAlbum = function(deletedAlbum, redirect) {
+
+			var modalInstance = $modal.open({
+				templateUrl: 'tpl/deleteAlbumModal.html',
+				controller: 'deleteAlbumModalCtrl',
+				resolve: { album: function(){return deletedAlbum} }
 			});
+
+			modalInstance.result.then(function () {
+
+				//remove album from all associated photo documents
+				window._.each(deletedAlbum.photos, function(photo) {
+					var p = $scope.pmSvc.getPhotoNow(photo._id).$promise; 
+					p.then(function(){
+						p.albums.splice(window._.indexOf(p.albums, deletedAlbum._id));
+						p.$save();						
+					})
+
+				
+				});				
+
+				
+				// then delete the album and either update album list or redirect to it
+				/**
+				$scope.pmSvc.deleteAlbum(deletedAlbum).then( function(){
+					if (redirect) {
+						$location.path('/albums');
+					} else {
+						$scope.albums.splice(window._.indexOf($scope.albums, deletedAlbum), 1); //remove from list
+						reNumberAlbums();					
+					}
+				});	
+				**/
+
+
+			}, function () {
+				console.log('Modal dismissed');
+			});
+
 		};
 
 		var reNumberAlbums = function () {
@@ -160,7 +211,6 @@ photomgrControllers.controller('AlbumCtrl', ['$scope', '$modal', 'Util', 'PhotoM
 		}			
 
 		var reNumberPhotos = function() {
-			console.log("reorder");
 			$( ".photo-list").children('.sortable').each(function(index) {
 				//get old item index
 				var oldIndex = parseInt($(this).attr("data-ng-photo-order"), 10);
@@ -168,11 +218,10 @@ photomgrControllers.controller('AlbumCtrl', ['$scope', '$modal', 'Util', 'PhotoM
 		            $scope.displayPhotos[oldIndex].order = index;
 	        	} 
 			});
-			//re-save the album in the same order
+			//reorder the album photos in the same order & save album
 			window._.each($scope.displayPhotos, function(photo, index){
 				album.photos[index] = window._.pick(photo, '_id', 'order');
 			})
-			
 			$scope.pmSvc.saveAlbum(album);
 		};
 
@@ -191,22 +240,10 @@ photomgrControllers.controller('AlbumCtrl', ['$scope', '$modal', 'Util', 'PhotoM
 			});
 			 
 			modalInstance.result.then(function (photo) {
-				//add order attribute to photo & save it in the album
-				photo.order = album.photos.length;
-				album.photos.push({_id: photo._id, order: photo.order})
-				$scope.pmSvc.saveAlbum(album);
 				//update display and select the freshly added photo
 				$scope.displayPhotos.push(photo);
 				$scope.displayPhoto = photo; 
-				//update photo with albumID if it doesn't already exist
-				//and delete photo.order that was mixed in from extendAlbumPhotos
-				if (!window._.contains(photo.albums, album._id)) {
-					photo.albums.push(album._id)
-					delete photo.order;
-					photo.$save();
-				} else {
-					console.log("Album already found in photo")
-				}
+				Util.addPhotoToAlbum(album,photo)
 			}, function () {
 				console.log('Modal dismissed');
 			});
@@ -216,20 +253,14 @@ photomgrControllers.controller('AlbumCtrl', ['$scope', '$modal', 'Util', 'PhotoM
 		$scope.removePhotoFromAlbum = function(removedPhoto) {
 			console.log(window._.indexOf($scope.displayPhotos, removedPhoto))
 			$scope.displayPhotos.splice(window._.indexOf($scope.displayPhotos, removedPhoto), 1);
-			if (window._.contains(removedPhoto.albums, album._id)) {
-				removedPhoto.albums.splice(window._.indexOf(removedPhoto.albums, album._id), 1)
-				delete removedPhoto.order;
-				$scope.pmSvc.savePhoto(removedPhoto);
-			} else {
-				console.log("Not found in photo.")
-			}
+			Util.removePhotoFromAlbum(album,removedPhoto);
 			updateAlbumPhotos();
 		}
 
-		var updateAlbumPhotos = function() {
+		var updateAlbumPhotos = function() { //reorder photos & save album when photo deleted
 			var a = []
 			window._.each($scope.displayPhotos, function(photo){
-				a.push({order: photo.order, _id: photo._id})
+				a.push({order: photo.order, _id: photo._id})//recreate album.photos from displayPhotos 
 			})
 			album.photos = a;
 			$scope.pmSvc.saveAlbum(album);
@@ -261,8 +292,6 @@ photomgrControllers.controller('AlbumCtrl', ['$scope', '$modal', 'Util', 'PhotoM
 			extendAlbumPhotos();
 			if ($scope.displayPhotos.length > 0) {$scope.displayPhoto = $scope.displayPhotos[0];}
 		};
-			
-		
 
 	}
 ])

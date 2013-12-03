@@ -40,6 +40,10 @@ photomgrServices.factory('PhotoMgrService', ['Album', 'Photo',
       });
    }
 
+   pmSvc.getPhotoNow = function(id) {
+      return Photo.get({id: id}).$promise;
+   }
+
    pmSvc.getAllPhotos = function() {
       return Photo.query({}, function(data) {
          return data;
@@ -123,7 +127,10 @@ photomgrServices.factory('Util', ['$q', 'Album', 'Photo',
          }
       };
 
-      util.removePhotoFromAlbum = function(album,photo){
+      util.removePhotoFromAlbum = function(removeAlbum,removePhoto){
+         var album = removeAlbum;
+         var photo = removePhoto;
+         // remove albumID from photo document
          if (window._.contains(photo.albums, album._id)) {
             photo.albums.splice(window._.indexOf(photo.albums, album._id), 1);
             console.log(photo)
@@ -132,14 +139,19 @@ photomgrServices.factory('Util', ['$q', 'Album', 'Photo',
          } else {
             console.log("Error removing from PHOTO");
          }
+         //remove photoID from album document
          if (window._.findWhere(album.photos, {_id: photo._id})) {
             album.photos.splice(window._.indexOf(album.photos, photo), 1);
             Album.save(album);   
-            console.log("Removed photo " + photo.name + " from Album " + album.name)          
+            console.log("Removed photo " + photo._id + " from Album " + album.name)          
          } else {
             console.log("Error removing from Album");
          }               
       };
+
+      util.removeAllPhotosFromAlbum = function(album) {
+
+      }
 
       return util;
 }]);

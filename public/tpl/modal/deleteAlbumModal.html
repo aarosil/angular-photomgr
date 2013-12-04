@@ -3,8 +3,8 @@
   <h4 class="modal-title">Confirm Album Deletion - {{album.name}}</h4>
 </div>
 <div class="modal-body">
-  <p>Are you sure you want to delete this album?  This action is irreversible</p>
-  <p>This album contains {{album.photos.length}} photos</p>
+  <p>Are you sure you want to delete the album "{{album.name}}"<span data-ng-hide="album.photos.length < 1">, containing {{album.photos.length}} photos</span>?</p>
+  <p>This action is irreversible</p>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-default" data-ng-click="cancel()">Close</button>

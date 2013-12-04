@@ -30,7 +30,7 @@ photomgrApp.config(['$routeProvider',
 				resolve: PhotoMgrData
 			}).			
 			when('/photos/:view/:photoId', {
-				templateUrl: 'tpl/photos.html',
+				templateUrl: 'tpl/photo-detail.html',
 				controller: 'PhotoCtrl', 
 				resolve: PhotoMgrData
 			}).

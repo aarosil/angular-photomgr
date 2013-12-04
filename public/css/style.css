@@ -4,7 +4,6 @@ body {
 }
 
 .section-header {
-
 	margin-bottom: 25px;
 }
 
@@ -32,8 +31,8 @@ body {
 	max-height: 300px;
 }
 
-.album-enabled span.disabled{
-	color: #CCCCCC;
+ span.disabled{
+	color: #C0C0C0;
 }
 
 .panel-heading.active .panel-title {
@@ -46,10 +45,8 @@ body {
 
 .list-group-item.active button.btn {
 	color: #FFFFFF;
-
 }
 
 .list-group-item.active a {
 	color: #FFFFFF;
-
 }

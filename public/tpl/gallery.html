@@ -10,8 +10,8 @@
 		<div class="col-lg-3">
 			<div class="panel-group">
 			  <div class="panel panel-default" data-ng-repeat="a in albums| filter:{enabled: true}|orderBy:'a.order'">
-			    <div class="panel-heading" data-ng-click="clickAlbum($index)" data-ng-class="(albums[$index]._id === album._id) ? 'active' : ''">
-			    	<a><h4 class="panel-title"><span class="glyphicon glyphicon-chevron-right" data-ng-show="(albums[$index]._id === album._id)"></span> {{a.name}}</h4></a>
+			    <div class="panel-heading" data-ng-click="clickAlbum($index)" data-ng-class="(albums[$index]._id === album._id) ? 'active enabled' : 'disabled'">
+			    	<a><h4 class="panel-title"><span class="glyphicon glyphicon-film" data-ng-class="(albums[$index]._id === album._id) ? 'enabled' : 'disabled'"></span> {{a.name}}</h4></a>
 		    	</div>
 			    <div class="panel-collapse" data-ng-class="a.opened ? 'collapse in' : 'collapse'">
 			      <div class="panel-body gallery-photo-name">

@@ -83,7 +83,7 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'U
 
 		$scope.deletePhoto = function(deletedPhoto, redirect) {
 			var modalInstance = $modal.open({
-				templateUrl: 'tpl/deletePhotoModal.html',
+				templateUrl: 'tpl/modal/deletePhotoModal.html',
 				controller: 'deletePhotoModalCtrl',
 				resolve: { photo: function(){return deletedPhoto} }
 			});
@@ -107,7 +107,7 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'U
 
 		$scope.addPhotoToAlbum = function(photo, album) {
 			var modalInstance = $modal.open({
-				templateUrl: 'tpl/selectAlbumModal.html',
+				templateUrl: 'tpl/modal/selectAlbumModal.html',
 				controller: 'modalInstanceCtrl',
 				resolve: {
 					albums: function () {
@@ -194,7 +194,7 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 		$scope.deleteAlbum = function(deletedAlbum, redirect) {
 
 			var modalInstance = $modal.open({
-				templateUrl: 'tpl/deleteAlbumModal.html',
+				templateUrl: 'tpl/modal/deleteAlbumModal.html',
 				controller: 'deleteAlbumModalCtrl',
 				resolve: { album: function(){return deletedAlbum} }
 			});
@@ -235,6 +235,7 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 		}			
 
 		var reNumberPhotos = function() {
+			//update display
 			$( ".photo-list").children('.sortable').each(function(index) {
 				//get old item index
 				var oldIndex = parseInt($(this).attr("data-ng-photo-order"), 10);
@@ -255,7 +256,7 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 
 		$scope.addPhotoToAlbum = function() {
 			var modalInstance = $modal.open({
-				templateUrl: 'tpl/selectPhotoModal.html',
+				templateUrl: 'tpl/modal/selectPhotoModal.html',
 				controller: 'modalInstanceCtrl',
 				resolve: {
 					photos: function () {return PhotoMgrService.getAllPhotos();},
@@ -305,14 +306,16 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 		$scope.newAlbum = $scope.pmSvc.newAlbum()
 		$scope.albums = albums;
 		$scope.pmSvc.filter = '';
-		//$scope.displayPhotos = album.photos;
-
 		$scope.section = {'name': 'Album', 'url':'/albums'}; //used in subnav.html
 
-		//merge attributes from album.photos and photos into $scope.displayPhotos
+		
 		if (view === 'detail') {
+			//merge attributes from album.photos and photos into $scope.displayPhotos
 			extendAlbumPhotos();
-			if ($scope.displayPhotos.length > 0) {$scope.displayPhoto = $scope.displayPhotos[0];}
+			if ($scope.displayPhotos.length > 0) {
+				$scope.displayPhoto = $scope.displayPhotos[0];
+				$scope.coverPic = window._.findWhere($scope.displayPhotos, {_id: album.coverPic})
+			}
 		};
 
 	}

@@ -48,9 +48,24 @@ photomgrControllers.controller('deleteAlbumModalCtrl', ['$scope', '$modalInstanc
 	}
 ]);
 
+photomgrControllers.controller('deletePhotoModalCtrl', ['$scope', '$modalInstance', 'photo',
+	function($scope, $modalInstance, photo) {
 
-photomgrControllers.controller('PhotoCtrl', ['$scope', '$modal', 'Util', 'PhotoMgrService', 'albums', 'photos', 'photo', 'view',
-	function($scope, $modal, Util, PhotoMgrService, albums, photos, photo, view	) {
+		$scope.photo = photo;
+
+		$scope.ok = function (result) {
+			$modalInstance.close(result);
+		};
+
+		$scope.cancel = function () {
+			$modalInstance.dismiss('cancel');
+		};		
+	}
+]);
+
+
+photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'Util', 'PhotoMgrService', 'albums', 'photos', 'photo', 'view',
+	function($scope, $location, $modal, Util, PhotoMgrService, albums, photos, photo, view	) {
 
 		$scope.uploadFile = function (files) {
 			var fd  = new FormData();
@@ -60,10 +75,34 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$modal', 'Util', 'PhotoM
 			});
 		};
 
-		$scope.deletePhoto = function(photo) {
+		$scope.deletePhotoOld = function(photo) {
 			$scope.pmSvc.deletePhoto(window._.findWhere($scope.photos, {_id: photo._id})).then( function(){
 				$scope.photos.splice(window._.indexOf($scope.photos, photo), 1); //remove from list
 			});
+		};		
+
+		$scope.deletePhoto = function(deletedPhoto, redirect) {
+			var modalInstance = $modal.open({
+				templateUrl: 'tpl/deletePhotoModal.html',
+				controller: 'deletePhotoModalCtrl',
+				resolve: { photo: function(){return deletedPhoto} }
+			});
+
+			modalInstance.result.then(function () {
+				//remove albumID from all associated photo documents
+				Util.removePhotoReferences(deletedPhoto);				
+				// then delete the photo and either update photo list or redirect to it
+				$scope.pmSvc.deletePhoto(deletedPhoto).then( function(){
+					if (redirect) {
+						$location.path('/photos');
+					} else {
+						$scope.photos.splice(window._.indexOf($scope.photos, deletedPhoto), 1); //remove from list				
+					}
+				});	
+			}, function () {
+				console.log('Modal dismissed');
+			});
+
 		};				
 
 		$scope.addPhotoToAlbum = function(photo, album) {
@@ -161,21 +200,9 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 			});
 
 			modalInstance.result.then(function () {
-
-				//remove album from all associated photo documents
-				window._.each(deletedAlbum.photos, function(photo) {
-					var p = $scope.pmSvc.getPhotoNow(photo._id).$promise; 
-					p.then(function(){
-						p.albums.splice(window._.indexOf(p.albums, deletedAlbum._id));
-						p.$save();						
-					})
-
-				
-				});				
-
-				
+				//remove albumID from all associated photo documents
+				Util.removeAlbumReferences(deletedAlbum);				
 				// then delete the album and either update album list or redirect to it
-				/**
 				$scope.pmSvc.deleteAlbum(deletedAlbum).then( function(){
 					if (redirect) {
 						$location.path('/albums');
@@ -184,9 +211,6 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 						reNumberAlbums();					
 					}
 				});	
-				**/
-
-
 			}, function () {
 				console.log('Modal dismissed');
 			});
@@ -237,8 +261,7 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 					photos: function () {return PhotoMgrService.getAllPhotos();},
 					albums: {}
 				}
-			});
-			 
+			});			 
 			modalInstance.result.then(function (photo) {
 				//update display and select the freshly added photo
 				$scope.displayPhotos.push(photo);
@@ -251,7 +274,6 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 		};
 
 		$scope.removePhotoFromAlbum = function(removedPhoto) {
-			console.log(window._.indexOf($scope.displayPhotos, removedPhoto))
 			$scope.displayPhotos.splice(window._.indexOf($scope.displayPhotos, removedPhoto), 1);
 			Util.removePhotoFromAlbum(album,removedPhoto);
 			updateAlbumPhotos();

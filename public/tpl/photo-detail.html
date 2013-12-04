@@ -71,7 +71,7 @@
                 </form>
 
                 <a class="btn btn-primary" ng-click="pmSvc.savePhoto(photo)" data-ng-disabled="!photo.name">Save</a>
-                <a class="btn" ng-click="pmSvc.deletePhoto(photo)" data-ng-disabled="!photo._id">Delete</a>        
+                <a class="btn" ng-click="deletePhoto(photo, true)" data-ng-disabled="!photo._id">Delete</a>        
             </div>
 
             <div class="col-lg-8">

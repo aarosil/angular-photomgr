@@ -133,25 +133,36 @@ photomgrServices.factory('Util', ['$q', 'Album', 'Photo',
          // remove albumID from photo document
          if (window._.contains(photo.albums, album._id)) {
             photo.albums.splice(window._.indexOf(photo.albums, album._id), 1);
-            console.log(photo)
             Photo.save(photo);
-            console.log("Removed album " + album.name + " from Photo " + photo.name)
-         } else {
-            console.log("Error removing from PHOTO");
-         }
+         } 
          //remove photoID from album document
          if (window._.findWhere(album.photos, {_id: photo._id})) {
             album.photos.splice(window._.indexOf(album.photos, photo), 1);
-            Album.save(album);   
-            console.log("Removed photo " + photo._id + " from Album " + album.name)          
-         } else {
-            console.log("Error removing from Album");
-         }               
+            Album.save(album);        
+         }            
       };
 
-      util.removeAllPhotosFromAlbum = function(album) {
+      //removes albumID from all of the photos references
+      util.removeAlbumReferences = function(deletedAlbum) {
+         window._.each(deletedAlbum.photos, function(photo) {
+            Photo.get({id: photo._id}, function(data) {
+               var p = data;
+               p.albums.splice(window._.indexOf(p.albums, deletedAlbum._id));
+               p.$save();              
+            })
+         });               
+      };
 
-      }
+      //remove photoID from all of the albums it references
+      util.removePhotoReferences = function(deletedPhoto) {
+         window._.each(deletedPhoto.albums, function(album) {
+            Album.get({id: album}, function(data) {
+               var a = data;
+               a.photos.splice(window._.indexOf(a.photos, deletedPhoto._id));
+               a.$save();              
+            })
+         });          
+      };
 
       return util;
 }]);

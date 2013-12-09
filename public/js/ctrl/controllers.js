@@ -75,12 +75,6 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'U
 			});
 		};
 
-		$scope.deletePhotoOld = function(photo) {
-			$scope.pmSvc.deletePhoto(window._.findWhere($scope.photos, {_id: photo._id})).then( function(){
-				$scope.photos.splice(window._.indexOf($scope.photos, photo), 1); //remove from list
-			});
-		};		
-
 		$scope.deletePhoto = function(deletedPhoto, redirect) {
 			var modalInstance = $modal.open({
 				templateUrl: 'tpl/modal/deletePhotoModal.html',
@@ -139,28 +133,24 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'U
 		$scope.photos = photos;
 		$scope.pmSvc.filter = ''; //for search box in child subnav.html to find it 
 		$scope.section = {'name': 'Photo', 'url':'/photos'}; //used in shared subnav.html
-
 		
-		if ($scope.view === 'list') { //enhance photo data with names of albums
-			window._.each(photos, function(photo) {
-				var a = [];
-				window._.each(photo.albums, function(album) {
-
-					var b = window._.findWhere(albums, {_id: album});
-					a.push({_id: b._id, name: b.name});
+		switch($scope.view) {
+			case 'list':
+				window._.each(photos, function(photo) {
+					var names = [];
+					window._.each(photo.albums, function(album) {
+						var b = window._.findWhere(albums, {_id: album});
+						names.push({_id: b._id, name: b.name});
+					});
+					photo.albumNames = names;
 				});
-				photo.albumNames = a;
-			});
+			case 'detail':
+				$scope.inAlbums = [];
+				window._.each(photo.albums, function(album) {
+					var a = window._.findWhere(albums, {_id: album})
+					$scope.inAlbums.push(a);		
+				});						
 		}
-		
-		if ($scope.view === 'detail') {
-			$scope.inAlbums = [];
-			window._.each(photo.albums, function(album) {
-				var a = window._.findWhere(albums, {_id: album})
-				$scope.inAlbums.push(a);		
-			});
-		}
-
 
 	}
 ]);
@@ -182,12 +172,18 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 			$scope.pmSvc.saveAlbum($scope.albums[index]);
 		}
 
-		$scope.saveAlbum = function (album) {
-			if (!album._id) {album.order = albums.length} // set order # to next if album is new
-			if (!album.photos) {album.photos = []}
+		$scope.saveAlbum = function (album, redirect) {
+			if (!album._id) { //album is new
+				album.photos = [];
+				album.order = albums.length;
+			} 
 			$scope.pmSvc.saveAlbum(album).then( function(data) {
 				$scope.albums.push(data); //add new album to list &  clear form
-				$scope.newAlbum = $scope.pmSvc.newAlbum();				
+				if (redirect) {
+					$location.path('/albums/detail/'+data._id);
+				} else {
+					$scope.newAlbum = $scope.pmSvc.newAlbum();				
+				}
 			});
 		};
 
@@ -335,6 +331,10 @@ photomgrControllers.controller('GalleryCtrl', ['$scope', 'albums', 'photos',
 
 		$scope.clickAlbum = function(i) { 
 			$scope.albums[i].opened = !$scope.albums[i].opened; 
+			if ($scope.albums[i].opened) {
+				$scope.album = $scope.albums[i]
+				$scope.photo = $scope.album.photos[0]
+			}
 		}
 
 		$scope.albums = window._.where(albums, {enabled: true});

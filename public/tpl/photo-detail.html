@@ -1,88 +1,93 @@
 <div class="container">
     <div class="row photo-detail"> 
-        <div> 
 
-            <div class="col-lg-12">
-                <h3 class="section-header">{{(photo.name)? photo.name : 'New Photo'}}</h3>
-            </div>
 
-            <div class="col-lg-4"> 
-
-                <form class="form-horizontal" role="form">
-
-                    <div class="form-group">
-                        <label for="id" class="col-lg-4 control-label">ID:</label>
-                        <div class="col-lg-8">
-                        <input class="form-control input-sm" data-ng-model="photo._id" disabled="" type="text">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="name" class="col-lg-4 control-label">Name:</label>
-                        <div class="col-lg-8">                
-                        <input class="form-control input-sm" data-ng-model="photo.name" type="text">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="location" class="col-lg-4 control-label">Location:</label>
-                        <div class="col-lg-8">                
-                        <input class="form-control input-sm" data-ng-model="photo.location" type="text">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="location" class="col-lg-4 control-label">Year:</label>
-                        <div class="col-lg-8">                
-                        <input class="form-control input-sm" data-ng-model="photo.year" type="text">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="album" class="col-lg-4 control-label">In Albums:</label>
-                        <div class="col-lg-8">    
-                            <div class="in-albums-list list-group" data-ng-if="inAlbums.length > 0">
-                                <div class="list-group-item" data-ng-repeat="album in inAlbums">{{album.name}}
-                                    <div class="pull-right">                     
-                                        <a class="btn btn-xs btn-link" href="#/albums/detail/{{album._id}}" title="View Album Details">
-                                            <span class="glyphicon glyphicon-cog"></span>    
-                                        </a>                                           
-                                        <a class="btn btn-xs btn-link" title="Remove Photo From Album" data-ng-click="removePhotoFromAlbum(album)">
-                                            <span class="glyphicon glyphicon-remove"></span>
-                                        </a>
-                                    </div>                                      
-                                </div>
-                            </div>
-                            <a class="btn btn-sm btn-primary" data-ng-click="addPhotoToAlbum()">Add to Album</a>
-                        </div>
-                    </div>                                              
-
-                    <div class="form-group">
-                        <label for="description" class="col-lg-4 control-label">Notes:</label>
-                        <div class="col-lg-8">                
-                        <textarea class="form-control input-sm" rows="2" data-ng-model="photo.description"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-lg-offset-4 col-lg-8">               
-                            <input class="form-control input-sm" id="uploadfile" name="uploadfile" type="file" onchange="angular.element(this).scope().uploadFile(this.files)">                
-                        </div>  
-                    </div>
-                </form>
-
-                <a class="btn btn-primary" ng-click="pmSvc.savePhoto(photo)" data-ng-disabled="!photo.name">Save</a>
-                <a class="btn" ng-click="deletePhoto(photo, true)" data-ng-disabled="!photo._id">Delete</a>        
-            </div>
-
-            <div class="col-lg-8">
-                <div class="well well-sm" data-ng-show"(photo._id !== '')">
-                    <div class="detail-img" >
-                        <img data-ng-src="{{photo.filepath}}">
-                    </div>      
-                </div>
-            </div>
-
+        <div class="col-lg-12">
+            <h2 class="section-header small">{{(photo._id)? 'Edit ' : 'Add '}} Photo</h2>
         </div>
+
+
+
+        <div class="col-lg-12">
+            <h3 class="item-header small">{{photo.name}}</h3>
+        </div>
+
+        <div class="col-lg-4"> 
+
+            <form class="form-horizontal" role="form">
+
+                <div class="form-group">
+                    <label for="id" class="col-lg-4 control-label">ID:</label>
+                    <div class="col-lg-8">
+                    <input class="form-control input-sm" data-ng-model="photo._id" disabled="" type="text">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name" class="col-lg-4 control-label">Name:</label>
+                    <div class="col-lg-8">                
+                    <input class="form-control input-sm" data-ng-model="photo.name" type="text">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="location" class="col-lg-4 control-label">Location:</label>
+                    <div class="col-lg-8">                
+                    <input class="form-control input-sm" data-ng-model="photo.location" type="text">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="location" class="col-lg-4 control-label">Year:</label>
+                    <div class="col-lg-8">                
+                    <input class="form-control input-sm" data-ng-model="photo.year" type="text">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="album" class="col-lg-4 control-label">In Albums:</label>
+                    <div class="col-lg-8">    
+                        <div class="in-albums-list list-group" data-ng-if="inAlbums.length > 0">
+                            <div class="list-group-item" data-ng-repeat="album in inAlbums">{{album.name}}
+                                <div class="pull-right">                     
+                                    <a class="btn btn-xs btn-link" href="#/albums/detail/{{album._id}}" title="View Album Details">
+                                        <span class="glyphicon glyphicon-cog"></span>    
+                                    </a>                                           
+                                    <a class="btn btn-xs btn-link" title="Remove Photo From Album" data-ng-click="removePhotoFromAlbum(album)">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                </div>                                      
+                            </div>
+                        </div>
+                        <a class="btn btn-sm btn-primary" data-ng-click="addPhotoToAlbum()">Add to Album</a>
+                    </div>
+                </div>                                              
+
+                <div class="form-group">
+                    <label for="description" class="col-lg-4 control-label">Notes:</label>
+                    <div class="col-lg-8">                
+                    <textarea class="form-control input-sm" rows="2" data-ng-model="photo.description"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-offset-4 col-lg-8">               
+                        <input class="form-control input-sm" id="uploadfile" name="uploadfile" type="file" onchange="angular.element(this).scope().uploadFile(this.files)">                
+                    </div>  
+                </div>
+            </form>
+
+            <a class="btn btn-primary" ng-click="savePhoto(photo)" data-ng-disabled="!photo.name">Save</a>
+            <a class="btn" ng-click="deletePhoto(photo, true)" data-ng-disabled="!photo._id">Delete</a>        
+        </div>
+
+        <div class="col-lg-8">
+            <div class="well well-sm" data-ng-show"(photo._id !== '')">
+                <div class="detail-img" >
+                    <img data-ng-src="{{photo.filepath}}">
+                </div>      
+            </div>
+        </div>
+
     </div>
 </div>

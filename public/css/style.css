@@ -31,10 +31,10 @@ body {
 	max-height: 300px;
 }
 
- span.disabled{
+span.disabled{
 	color: #C0C0C0;
 }
-
+ 
 .panel-heading.active .panel-title {
 	font-weight: bold;
 }

@@ -1,18 +1,20 @@
 <div class="container">
     <div class="row">
-        
+
         <div class="col-lg-12">
-            <h3 class="section-header">{{(album._id)? 'Edit ' : 'Add '}} Album</h3>
+            <h2 class="section-header">{{(album._id)? 'Edit ' : 'Add '}} Album</h2>
         </div>
 
 
-        <!--
+
+        <div class="col-lg-12">
+            <h3 class="item-header">{{album.name}}</h3>
+        </div>
+
+
         <tabset>
-        <tab heading = "{{album.name}}">
-        -->
-        <div class="col-lg-12">
-            <h3 class="item-header small">{{album.name}}</h3>
-        </div>
+        <tab heading = "Details">
+      
         <div class="col-lg-4"> 
             
             <form class="form-horizontal" role="form">
@@ -63,11 +65,13 @@
 
             </form>
 
-            <a class="btn btn-primary" ng-click="saveAlbum(album, true)" data-ng-disabled="!album.name">Save</a>
+            <a class="btn btn-primary" ng-click="saveAlbum(album, !(album._id))" data-ng-disabled="!album.name">Save</a>
             <a class="btn btn-default" ng-click="deleteAlbum(album, true)" data-ng-disabled="!album._id">Delete</a>
         </div>
+        </tab>
 
-
+        <tab heading="Edit Photos ({{album.photos.length}})">
+        <div class="container">
         <div class="col-lg-3">     
             <div class="form-group">
                 <input class="form-control input-sm" type="text" ng-model="searchText" placeholder="Search photos"></input>
@@ -98,7 +102,10 @@
                 </div>      
             </div>
         </div>
-            
+
+        </div>                
+        </tab>
+        </tabset>
 
     </div>
 </div>

@@ -24,6 +24,11 @@ photomgrApp.config(['$routeProvider',
 				controller: 'PhotoCtrl', 
 				resolve: PhotoMgrData
 			}).
+			when('/photos/add', {
+				templateUrl: 'tpl/photo-detail.html',
+				controller: 'PhotoCtrl', 
+				resolve: PhotoMgrData
+			}).	
 			when('/photos/:view', {
 				templateUrl: 'tpl/photos.html',
 				controller: 'PhotoCtrl', 
@@ -41,6 +46,11 @@ photomgrApp.config(['$routeProvider',
 				controller: 'AlbumCtrl', 
 				resolve: PhotoMgrData
 			}).
+			when('/albums/add', {
+				templateUrl:'tpl/album-detail.html',
+				controller: 'AlbumCtrl', 
+				resolve: PhotoMgrData
+			}).			
 			when('/albums/:view', {
 				templateUrl: 'tpl/albums.html',
 				controller: 'AlbumCtrl', 

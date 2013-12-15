@@ -249,29 +249,36 @@ exports.uploadPhotoAWS = function (req, res) {
 
 	var uploadfile = req.files.uploadfile.path;
 	var name = 'img/' + req.files.uploadfile.name;
+	var fs = require('fs');
 
-	require('fs').stat(uploadfile, function(err, file_info) {
+	fs.stat(uploadfile, function(err, file_info) {
 
-	    var bodyStream = fs.createReadStream(uploadfile);
+		if (err) {
+			console.log("ERROR UPLOAD: " + err)
+		} else {
 
-	    var params = {
-	    	ACL			: 'public-read',
-	        Bucket    	: bucket,
-	        Key			: name,
-	        ContentLength : file_info.size,
-	        Body          : bodyStream
-	    };
+		    var bodyStream = fs.createReadStream(uploadfile);
 
-	    s3bucket = new AWS.S3({params: {Bucket: bucket}});
+		    var params = {
+		    	ACL			: 'public-read',
+		        Bucket    	: bucket,
+		        Key			: name,
+		        ContentLength : file_info.size,
+		        Body          : bodyStream
+		    };
 
-	    s3bucket.putObject(params, function(err, data) {
-	        if(err){
-	        	console.log(err);
-	        } else {
-	        	res.send({path: 'http://young-badlands-8496.s3-website-us-east-1.amazonaws.com/' + name})	
-	        }
-	    	
-	    });
+		    s3bucket = new AWS.S3({params: {Bucket: bucket}});
+
+		    s3bucket.putObject(params, function(err, data) {
+		        if(err){
+		        	console.log(err);
+		        } else {
+		        	res.send({path: 'http://young-badlands-8496.s3-website-us-east-1.amazonaws.com/' + name})	
+		        }
+		    	
+		    });
+
+		}
 
 	});	
 }

@@ -75,6 +75,12 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'U
 			});
 		};
 
+		$scope.savePhoto = function (photo) {
+			$scope.pmSvc.savePhoto(photo).then( function(data) {
+				$location.path('/photos/detail/'+data._id);
+			});
+		};
+
 		$scope.deletePhoto = function(deletedPhoto, redirect) {
 			var modalInstance = $modal.open({
 				templateUrl: 'tpl/modal/deletePhotoModal.html',

@@ -40,10 +40,6 @@ photomgrServices.factory('PhotoMgrService', ['Album', 'Photo',
       });
    }
 
-   pmSvc.getPhotoNow = function(id) {
-      return Photo.get({id: id}).$promise;
-   }
-
    pmSvc.getAllPhotos = function() {
       return Photo.query({}, function(data) {
          return data;

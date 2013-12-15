@@ -59,7 +59,7 @@
                                 </div>                                      
                             </div>
                         </div>
-                        <a class="btn btn-sm btn-primary" data-ng-click="addPhotoToAlbum()">Add to Album</a>
+                        <a class="btn btn-sm btn-primary" data-ng-click="addPhotoToAlbum()" data-ng-disabled="!photo._id">Add to Album</a>
                     </div>
                 </div>                                              
 
@@ -81,8 +81,8 @@
             <a class="btn" ng-click="deletePhoto(photo, true)" data-ng-disabled="!photo._id">Delete</a>        
         </div>
 
-        <div class="col-lg-8">
-            <div class="well well-sm" data-ng-show"(photo._id !== '')">
+        <div class="col-lg-8" data-ng-show"(photo._id !== '')">
+            <div class="well well-sm">
                 <div class="detail-img" >
                     <img data-ng-src="{{photo.filepath}}">
                 </div>      

@@ -12,8 +12,7 @@
         </div>
 
 
-        <tabset>
-        <tab heading = "Details">
+
       
         <div class="col-lg-4"> 
             
@@ -68,10 +67,8 @@
             <a class="btn btn-primary" ng-click="saveAlbum(album, !(album._id))" data-ng-disabled="!album.name">Save</a>
             <a class="btn btn-default" ng-click="deleteAlbum(album, true)" data-ng-disabled="!album._id">Delete</a>
         </div>
-        </tab>
 
-        <tab heading="Edit Photos ({{album.photos.length}})">
-        <div class="container">
+
         <div class="col-lg-3">     
             <div class="form-group">
                 <input class="form-control input-sm" type="text" ng-model="searchText" placeholder="Search photos"></input>
@@ -103,9 +100,7 @@
             </div>
         </div>
 
-        </div>                
-        </tab>
-        </tabset>
+
 
     </div>
 </div>

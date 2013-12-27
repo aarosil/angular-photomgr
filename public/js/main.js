@@ -68,11 +68,17 @@ photomgrApp.config(['$routeProvider',
 				controller: 'GalleryCtrl', 
 				resolve: GalleryData
 			}).
+
 			when('/gallery/:albumId', {
 				templateUrl: 'tpl/gallery.html', 
 				controller: 'GalleryCtrl', 
 				resolve: PhotoMgrData
 			}).			
+			/** LOGIN ****/
+			when('/login', {
+				templateUrl: 'tpl/login.html', 
+				controller: 'LoginCtrl'
+			}).
 			otherwise({
 				redirectTo: '/'
 			})

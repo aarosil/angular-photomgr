@@ -1,21 +1,18 @@
 <div class="container">
-    <div class="row">
+    <div class="row detail-nav">
+
 
         <div class="col-lg-12">
             <h2 class="section-header">{{(album._id)? 'Edit ' : 'Add '}} Album</h2>
         </div>
 
-
-
-        <div class="col-lg-12">
-            <h3 class="item-header">{{album.name}}</h3>
-        </div>
-
-
-
-      
         <div class="col-lg-4"> 
-            
+
+            <h3 class="item-header small">{{album.name}}</h3>
+            <div class="well well-sm">
+            <h4 class="item-header"><span class="glyphicon glyphicon-cog"></span> Details</h4>
+
+
             <form class="form-horizontal" role="form">
 
                 <div class="form-group">
@@ -66,41 +63,68 @@
 
             <a class="btn btn-primary" ng-click="saveAlbum(album, !(album._id))" data-ng-disabled="!album.name">Save</a>
             <a class="btn btn-default" ng-click="deleteAlbum(album, true)" data-ng-disabled="!album._id">Delete</a>
-        </div>
-
-
-        <div class="col-lg-3">     
-            <div class="form-group">
-                <input class="form-control input-sm" type="text" ng-model="searchText" placeholder="Search photos"></input>
-            </div>  
-            <div class="photo-list list-group" ui-sortable="sortPhotos" data-ng-model="displayPhotos">
-                <div data-ng-repeat="item in displayPhotos |filter:searchText"  data-ng-photo-order="{{$index}}"
-                    class="sortable list-group-item" data-ng-class="(item._id === displayPhoto._id)? 'active' : '';">
-                    <span>
-                        <a data-ng-click="clickPhoto(item)"><!-- {{$index}} {{item.order }} -->{{item.name}} </a>
-                    </span>
-                    <div class="pull-right">                     
-                        <a class="btn btn-xs btn-link" href="#/photos/detail/{{item._id}}" title="View Photo Details">
-                            <span class="glyphicon glyphicon-cog"></span>    
-                        </a>                           
-                        <a class="btn btn-xs btn-link" title="Remove Photo From Album" data-ng-click="removePhotoFromAlbum(item)">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
-                    </div>             
-                </div> 
-            </div>     
-            <button data-ng-click="addPhotoToAlbum()" class="btn btn-default btn-sm">Add Photo</button>
-        </div>
-
-        <div class="col-lg-5">
-            <div class="well well-sm">
-                <div class="detail-img">
-                    <img data-ng-src="{{displayPhoto.filepath}}">
-                </div>      
             </div>
         </div>
 
+        <div class="col-lg-8" data-ng-show="album._id">
+            <tabset>
+                <!-- EDIT PHOTOS TAB -->
+                <tab>
+                    <tab-heading>
+                        <h4 class=""><span class="glyphicon glyphicon-edit"></span> Edit Photos ({{album.photos.length}})</h4>
+                    </tab-heading>
+                    
 
+                    <div class="form-group">
+                        <input class="form-control input-sm" type="text" ng-model="searchText" placeholder="Search photos"></input>
+                    </div>  
+
+
+                    <table class="table table-striped table-hover">
+                        <thead class="nonsortable">
+                            <th>#</th>
+                            <th>Name</th>
+                            <th colspan="4">Description</th>                                                                
+                        </thead> 
+                        <tbody class="photo-list-table" ui-sortable="sortPhotos" data-ng-model="displayPhotos">    
+                            <tr data-ng-repeat="item in displayPhotos |filter:searchText" data-ng-photo-order="{{$index}}" class="sortable"
+                                data-ng-click="clickPhoto(item)" data-ng-class="(item._id === displayPhoto._id)? 'active' : '';">
+                                <td>{{$index + 1}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.description}}</td>
+                                <td style="text-align: center">
+                                  <a href="">
+                                    <span class="glyphicon glyphicon-move" title="Click and Drag Rows to Reorder Albums"/>
+                                  </a>
+                                </td>
+                                <td style="text-align: center" >
+                                    <a class="btn btn-xs btn-link" href="#/photos/detail/{{item._id}}" title="View Photo Details">
+                                        <span class="glyphicon glyphicon-cog"></span>    
+                                    </a>
+                                </td>
+                                <td style="text-align: center">
+                                    <a class="btn btn-xs btn-link" title="Remove Photo From Album" data-ng-click="removePhotoFromAlbum(item)">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                </td>                                
+                            </tr>           
+                        </tbody>
+                    </table>
+                    <button data-ng-click="addPhotoToAlbum()" class="btn btn-default btn-sm">Add Photo</button>                                        
+                </tab>      
+                <!-- GALLERY PREVIEW TAB -->      
+                <tab select="">
+                    <tab-heading>
+                        <h4 class=""><span class="glyphicon glyphicon-film"></span> Gallery </h4>
+                    </tab-heading>
+                    <div class="well well-sm">
+                        <div class="detail-img">
+                            <img data-ng-src="{{displayPhoto.filepath}}">
+                        </div>      
+                    </div>                    
+                </tab>                
+            </tabset>
+        </div>
 
     </div>
 </div>

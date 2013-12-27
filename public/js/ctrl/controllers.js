@@ -238,7 +238,7 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 
 		var reNumberPhotos = function() {
 			//update display
-			$( ".photo-list").children('.sortable').each(function(index) {
+			$( ".photo-list-table").children('.sortable').each(function(index) {
 				//get old item index
 				var oldIndex = parseInt($(this).attr("data-ng-photo-order"), 10);
 	            if ($scope.displayPhotos[oldIndex]) {
@@ -253,6 +253,8 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 		};
 
 		$scope.sortPhotos = { //used by sortable photo list element
+			cancel: '.nonsortable',
+			items: '.sortable',				
 			stop: function() {reNumberPhotos()}
 		}		
 
@@ -359,6 +361,14 @@ photomgrControllers.controller('GalleryCtrl', ['$scope', 'albums', 'photos',
 
 	}
 ]);
+
+photomgrControllers.controller('LoginCtrl', ['$scope',
+	function($scope) {
+
+	}
+]);
+
+
 
 //To Pre-load Album & Photo data before route change 
 PhotoMgrData = { 

@@ -7,6 +7,16 @@ body {
 	margin-bottom: 25px;
 }
 
+.item-header {
+	margin-bottom: 15px;
+	margin-top: 0px;
+}
+
+.item-header {
+	margin-bottom: 15px;
+	margin-top: 5px;
+}
+
 .albumgrid-thumbnail {
 	margin-bottom: 30px;
 }
@@ -14,6 +24,10 @@ body {
 .footer {
   margin-top:15px;
   font-weight: bold;
+}
+
+.detail-nav {
+padding-bottom:  15px;
 }
 
 .carousel-img img{

@@ -1,7 +1,9 @@
 var photomgrApp = angular.module('photomgrApp', [
 		'ngRoute',
+		'ngCookies',
 		'photomgrControllers',
 		'photomgrServices',
+		'photomgrDirectives',
 		'ui.sortable',
 		'ui.bootstrap'
 	]);
@@ -15,7 +17,8 @@ photomgrApp.config(['$routeProvider',
 				resolve: HomeData
 			}).
 			when('/about', {
-				templateUrl: 'tpl/about.html'
+				templateUrl: 'tpl/about.html',
+				controller: 'LoginCtrl'
 			}).	
 
 			/** PHOTOS ****/
@@ -68,16 +71,24 @@ photomgrApp.config(['$routeProvider',
 				controller: 'GalleryCtrl', 
 				resolve: GalleryData
 			}).
-
 			when('/gallery/:albumId', {
 				templateUrl: 'tpl/gallery.html', 
 				controller: 'GalleryCtrl', 
 				resolve: PhotoMgrData
-			}).			
-			/** LOGIN ****/
+			}).		
+
+			/** LOGIN /USERPROFILE****/
 			when('/login', {
 				templateUrl: 'tpl/login.html', 
 				controller: 'LoginCtrl'
+			}).
+			when('/register', {
+				templateUrl: 'tpl/register.html', 
+				controller: 'LoginCtrl'
+			}).			
+			when('/profile', {
+				templateUrl: 'tpl/user-profile.html', 
+				controller: 'ProfileCtrl'
 			}).
 			otherwise({
 				redirectTo: '/'

@@ -2,6 +2,9 @@
  * Module dependencies.
  */
 var express = require('express');
+var passport = require('passport');
+var passportCfg = require('./config/passportCfg');
+//var LocalStrategy = require('passport-local')
 var http = require('http');
 var path = require('path');
 var pm = require('./photomanager');
@@ -18,6 +21,8 @@ app.use(express.bodyParser());
 app.use(express.cookieParser());
 app.use(express.session({secret: 'h0m3w0rk'}))
 app.use(express.methodOverride());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 if ('development' == app.get('env')) {
@@ -45,6 +50,17 @@ app.post('/albums/:id', pm.updateAlbum);
 app.delete('/albums/:id', pm.deleteAlbum);
 /** Gallery - returns all photos with album = id **/
 app.get('/gallery/:id', pm.findAllPhotosInAlbum);
+/** Login to App **/
+app.post('/login', passportCfg.postLogin);
+app.get('/logout', function(req, res){
+	req.logOut(); 
+	//res.clearCookie('user');
+	res.send(200);
+});
+app.get('/protected', passportCfg.ensureAuthenticated, function(req, res){res.send('PROTECTED')})
+app.get('/isloggedin', function(req, res) {
+	res.send(req.isAuthenticated() ? req.user : 0)
+});
 
 /**
  * Start Server.

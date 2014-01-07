@@ -20,12 +20,18 @@
 			</div>
 			<ul class="nav navbar-nav">
 			    <li data-ng-class="{'active':highlight('/gallery')}"><a href="#/gallery">Gallery</a></li>
-			    <li data-ng-class="{'active':highlight('/albums')}"><a href="#/albums">Albums</a></li>
-			    <li data-ng-class="{'active':highlight('/photos')}"><a href="#/photos">Photos</a></li>
+			    <li data-ng-class="{'active':highlight('/albums')}" data-ng-if="auth.isLoggedIn"><a href="#/albums">Albums</a></li>
+			    <li data-ng-class="{'active':highlight('/photos')}" data-ng-if="auth.isLoggedIn"><a href="#/photos">Photos</a></li>
 			</ul>
-			<ul class="nav navbar-nav pull-right">
-				<li data-ng-class="{'active':highlight('/login')}"><a href="#/login">Login</a></li>
+			<ul class="nav navbar-nav pull-right" >
 				<li data-ng-class="{'active':highlight('/about')}"><a href="#/about">About</a></li>
+<!--
+				<li data-ng-class="{'active':highlight('/login')}" data-ng-if="!auth.isLoggedIn"><a href="#/login">Login</a></li>	
+-->
+				<li data-ng-class="{'active':highlight('/profile')}" data-ng-if="auth.isLoggedIn"><a href="#/profile">Welcome, <span data-ng-bind="auth.user.username"/></a></li>
+
+			<li login=""/>
+
 			</ul>
         </div>
 	</div>
@@ -45,12 +51,12 @@
     </div>
 
 	<!-- 3rd Party Libraries  -->
-
 	<script src="lib/jquery.min.js"></script>
 	<script src="lib/jquery-ui.js"></script>
 	<script src="lib/angular.js"></script>
 	<script src="lib/angular-route.js"></script>
 	<script src="lib/angular-resource.js"></script>	
+	<script src="lib/angular-cookies.js"></script>
 	<script src="lib/ui-bootstrap-tpls-0.7.0.js"></script>	
 	<script src="lib/underscore.js"></script>
 	<script src="lib/angular-ui.sortable.js"></script>	
@@ -59,6 +65,7 @@
 	<script src="js/main.js"></script>
 	<script src="js/ctrl/controllers.js"></script>
 	<script src="js/svcs/services.js"></script>
+	<script src="js/directives/directives.js"></script>
 
 </body>
 

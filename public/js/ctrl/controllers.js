@@ -1,4 +1,4 @@
-var photomgrControllers = angular.module('photomgrControllers', []);
+var photomgrControllers = angular.module('photomgrControllers', ['photomgrDirectives']);
 
 photomgrControllers.controller('HomeCtrl', ['$scope', 'photos',
 	function($scope, photos) {
@@ -8,9 +8,10 @@ photomgrControllers.controller('HomeCtrl', ['$scope', 'photos',
 	}
 ]);
 
-photomgrControllers.controller('NavCtrl', ['$scope', '$location',
-	function($scope, $location) {
+photomgrControllers.controller('NavCtrl', ['$scope', '$location', 'Auth',
+	function($scope, $location, Auth) {
 
+		$scope.auth = Auth;
         $scope.highlight = function (regexp) {
             return RegExp(regexp).test($location.path());
         };
@@ -362,12 +363,32 @@ photomgrControllers.controller('GalleryCtrl', ['$scope', 'albums', 'photos',
 	}
 ]);
 
-photomgrControllers.controller('LoginCtrl', ['$scope',
-	function($scope) {
+photomgrControllers.controller('LoginCtrl', ['$scope', '$location', 'Auth', '$rootScope',
+	function($scope, $location, Auth, $rootScope) {
+		
+		$scope.auth = Auth;
+
+		$scope.login = function() {
+			Auth.logIn($scope.user).then(function(data,status,header){
+				Auth.isLoggedIn = true;
+				Auth.user = data.data;
+				$rootScope.$broadcast('logIn', Auth.user);
+				$location.path('/profile');
+			});
+		};
+
+        $scope.register = function () {
+
+        };	    
 
 	}
 ]);
 
+photomgrControllers.controller('ProfileCtrl', ['$scope', 'Auth', 
+	function($scope, Auth) {
+		$scope.auth = Auth;
+	}
+]);
 
 
 //To Pre-load Album & Photo data before route change 
@@ -417,3 +438,4 @@ HomeData = {
 		return Photo.query().$promise;
 	}
 };
+

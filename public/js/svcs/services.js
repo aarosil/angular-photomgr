@@ -23,6 +23,41 @@ photomgrServices.factory('Album', ['$resource',
 		});
 	}]);
 
+photomgrServices.factory('Auth', ['$http', '$cookies',
+   function($http, $cookies){
+      
+      var auth = {};
+
+      auth.user = {}
+      auth.isLoggedIn = false;
+
+      auth.logIn = function(userData) {
+         if (userData) {
+            return $http.post("/login", userData);
+         }
+      };
+
+      auth.logOut = function() {
+         return $http.get("/logout");
+      };
+
+      auth.loggedIn = function() {
+         return $http.get("/isloggedin");
+      };
+
+      auth.register = function() {
+
+      };
+
+      auth.loggedIn().then(function(data,status,header){
+         auth.user = data.data;
+         auth.isLoggedIn = true;
+      }); 
+
+      return auth;
+
+   }]);
+
 photomgrServices.factory('PhotoMgrService', ['Album', 'Photo',    
    function(Album, Photo) {
 
@@ -99,8 +134,8 @@ photomgrServices.factory('PhotoMgrService', ['Album', 'Photo',
 
 }]);
 
-photomgrServices.factory('Util', ['$q', 'Album', 'Photo',   
-   function($q, Album, Photo) {
+photomgrServices.factory('Util', ['Album', 'Photo',   
+   function(Album, Photo) {
 
       var util = {};
       

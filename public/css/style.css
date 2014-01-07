@@ -64,3 +64,10 @@ span.disabled{
 .list-group-item.active a {
 	color: #FFFFFF;
 }
+
+.photogrid-caption {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	
+}

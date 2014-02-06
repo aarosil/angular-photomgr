@@ -3,8 +3,10 @@
  */
 var express = require('express');
 var passport = require('passport');
+var mongoose = require('mongoose');
+var models = require('./models')
+var dbCfg = require('./config/dbCfg');
 var passportCfg = require('./config/passportCfg');
-//var LocalStrategy = require('passport-local')
 var http = require('http');
 var path = require('path');
 var pm = require('./photomanager');
@@ -24,7 +26,7 @@ app.use(express.methodOverride());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../public')));
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
@@ -44,7 +46,8 @@ app.delete('/photos/:id', pm.deletePhoto);
 /** Album C.R.U.D. **/
 app.post('/albums', pm.addAlbum);
 app.get('/albums', pm.findAllAlbums);
-app.get('/albums/:id', pm.findAlbumName);
+app.post('/albums/:id/:action/:photoId', pm.editAlbumPhotos)
+app.get('/albums/:id', pm.findAlbumById);
 app.put('/albums/:id', pm.updateAlbum);
 app.post('/albums/:id', pm.updateAlbum);
 app.delete('/albums/:id', pm.deleteAlbum);

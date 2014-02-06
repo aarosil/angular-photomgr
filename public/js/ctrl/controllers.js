@@ -65,8 +65,8 @@ photomgrControllers.controller('deletePhotoModalCtrl', ['$scope', '$modalInstanc
 ]);
 
 
-photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'Util', 'PhotoMgrService', 'albums', 'photos', 'photo', 'view',
-	function($scope, $location, $modal, Util, PhotoMgrService, albums, photos, photo, view	) {
+photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'PhotoMgrService', 'photos', 'photo', 'view',
+	function($scope, $location, $modal, PhotoMgrService, photos, photo, view	) {
 
 		$scope.uploadFile = function (files) {
 			var fd  = new FormData();
@@ -89,10 +89,8 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'U
 				resolve: { photo: function(){return deletedPhoto} }
 			});
 
-			modalInstance.result.then(function () {
-				//remove albumID from all associated photo documents
-				Util.removePhotoReferences(deletedPhoto);				
-				// then delete the photo and either update photo list or redirect to it
+			modalInstance.result.then(function () {		
+				// Delete the photo and either update photo list or redirect to it
 				$scope.pmSvc.deletePhoto(deletedPhoto).then( function(){
 					if (redirect) {
 						$location.path('/photos');
@@ -111,15 +109,13 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'U
 				templateUrl: 'tpl/modal/selectAlbumModal.html',
 				controller: 'modalInstanceCtrl',
 				resolve: {
-					albums: function () {
-						return albums;
-					},
+					albums: function () {return PhotoMgrService.getAllAlbums().$promise;},
 					photos:{}
 				}
 			})
 
 			modalInstance.result.then(function (album) {
-				Util.addPhotoToAlbum(album,$scope.photo);
+				$scope.pmSvc.editAlbumPhotos('add',$scope.photo, album);
 	            $scope.inAlbums.push(album); 
 			}, function () {
 				console.log('Modal dismissed');
@@ -128,7 +124,7 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'U
 		};
 
 		$scope.removePhotoFromAlbum = function(album) {
-			Util.removePhotoFromAlbum(album,$scope.photo);
+			$scope.pmSvc.editAlbumPhotos('remove',$scope.photo,album);
 			//update display
 			$scope.inAlbums.splice(window._.indexOf($scope.inAlbums, album), 1);
 		}		
@@ -136,34 +132,15 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'U
 		$scope.pmSvc = PhotoMgrService;
 		$scope.view = view ? view : 'list'; //view = list if not set in route params
 		$scope.photo = photo;
-		$scope.albums = albums;		
 		$scope.photos = photos;
 		$scope.pmSvc.filter = ''; //for search box in child subnav.html to find it 
 		$scope.section = {'name': 'Photo', 'url':'/photos'}; //used in shared subnav.html
 		
-		switch($scope.view) {
-			case 'list':
-				window._.each(photos, function(photo) {
-					var names = [];
-					window._.each(photo.albums, function(album) {
-						var b = window._.findWhere(albums, {_id: album});
-						names.push({_id: b._id, name: b.name});
-					});
-					photo.albumNames = names;
-				});
-			case 'detail':
-				$scope.inAlbums = [];
-				window._.each(photo.albums, function(album) {
-					var a = window._.findWhere(albums, {_id: album})
-					$scope.inAlbums.push(a);		
-				});						
-		}
-
 	}
 ]);
 
-photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'Util', 'PhotoMgrService', 'album', 'albums', 'photo', 'photos', 'view',
-	function($location, $scope, $modal, Util, PhotoMgrService, album, albums, photo, photos, view) {
+photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'PhotoMgrService', 'album', 'albums', 'view',
+	function($location, $scope, $modal, PhotoMgrService, album, albums, view) {
 
 		$scope.clickPhoto = function(p) {
 			$scope.displayPhoto = p;
@@ -202,10 +179,8 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 				resolve: { album: function(){return deletedAlbum} }
 			});
 
-			modalInstance.result.then(function () {
-				//remove albumID from all associated photo documents
-				Util.removeAlbumReferences(deletedAlbum);				
-				// then delete the album and either update album list or redirect to it
+			modalInstance.result.then(function () {		
+				// Delete the album and either update album list or redirect to it
 				$scope.pmSvc.deleteAlbum(deletedAlbum).then( function(){
 					if (redirect) {
 						$location.path('/albums');
@@ -247,10 +222,13 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 	        	} 
 			});
 			//reorder the album photos in the same order & save album
-			window._.each($scope.displayPhotos, function(photo, index){
-				album.photos[index] = window._.pick(photo, '_id', 'order');
-			})
-			$scope.pmSvc.saveAlbum(album);
+			$scope.pmSvc.getAlbum(album._id).$promise.then(function(album){
+				album.photoList=[];
+				window._.each($scope.displayPhotos, function(photo, index){
+					album.photoList[index] = window._.pick(photo, '_id', 'order');
+				})				
+				$scope.pmSvc.saveAlbum(album);	
+			});			
 		};
 
 		$scope.sortPhotos = { //used by sortable photo list element
@@ -264,15 +242,16 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 				templateUrl: 'tpl/modal/selectPhotoModal.html',
 				controller: 'modalInstanceCtrl',
 				resolve: {
-					photos: function () {return PhotoMgrService.getAllPhotos();},
+					photos: function () {return PhotoMgrService.getAllPhotos().$promise;},
 					albums: {}
 				}
 			});			 
-			modalInstance.result.then(function (photo) {
-				//update display and select the freshly added photo
-				$scope.displayPhotos.push(photo);
-				$scope.displayPhoto = photo; 
-				Util.addPhotoToAlbum(album,photo)
+			modalInstance.result.then(function (addedPhoto) {
+				$scope.pmSvc.editAlbumPhotos('add', addedPhoto, album)
+					.$promise.then(function(data){
+						$scope.displayPhotos.push(data.photo);
+						$scope.displayPhoto = data.photo; 
+					});
 			}, function () {
 				console.log('Modal dismissed');
 			});
@@ -281,28 +260,7 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 
 		$scope.removePhotoFromAlbum = function(removedPhoto) {
 			$scope.displayPhotos.splice(window._.indexOf($scope.displayPhotos, removedPhoto), 1);
-			Util.removePhotoFromAlbum(album,removedPhoto);
-			updateAlbumPhotos();
-		}
-
-		var updateAlbumPhotos = function() { //reorder photos & save album when photo deleted
-			var a = []
-			window._.each($scope.displayPhotos, function(photo){
-				a.push({order: photo.order, _id: photo._id})//recreate album.photos from displayPhotos 
-			})
-			album.photos = a;
-			$scope.pmSvc.saveAlbum(album);
-
-		}
-
-		var extendAlbumPhotos = function() {
-			var displayPhotos = []
-			window._.each(album.photos, function(photo) {
-				var p = window._.clone(photo)
-				window._.extend(p, window._.findWhere(photos, {_id: photo._id}))
-				displayPhotos.push(p)
-			});
-			$scope.displayPhotos = displayPhotos;
+			$scope.pmSvc.editAlbumPhotos('remove', removedPhoto, album);
 		}
 
 		$scope.pmSvc = PhotoMgrService;
@@ -313,10 +271,12 @@ photomgrControllers.controller('AlbumCtrl', ['$location', '$scope', '$modal', 'U
 		$scope.pmSvc.filter = '';
 		$scope.section = {'name': 'Album', 'url':'/albums'}; //used in subnav.html
 
-		
 		if (view === 'detail') {
-			//merge attributes from album.photos and photos into $scope.displayPhotos
-			extendAlbumPhotos();
+			console.log(album)
+			$scope.displayPhotos = [];
+			window._.each(album.photoList, function(entry){
+				$scope.displayPhotos.push(entry._id);
+			})
 			if ($scope.displayPhotos.length > 0) {
 				$scope.displayPhoto = $scope.displayPhotos[0];
 				$scope.coverPic = window._.findWhere($scope.displayPhotos, {_id: album.coverPic})
@@ -333,32 +293,37 @@ photomgrControllers.controller('GalleryCtrl', ['$scope', 'albums', 'photos',
 			if (albumID !== $scope.album._id) {
 				$scope.album = window._.findWhere($scope.albums, {_id: albumID})
 			}
-			$scope.prev = (index - 1) < 0 ? $scope.album.photos.length - 1: index - 1;
-			$scope.next = (index + 1) % $scope.album.photos.length;
-			$scope.photo = $scope.album.photos[index];
+			$scope.prev = (index - 1) < 0 ? $scope.album.photoList.length - 1: index - 1;
+			$scope.next = (index + 1) % $scope.album.photoList.length;
+			$scope.photo = $scope.album.photoList[index];
 		}
 
 		$scope.clickAlbum = function(i) { 
 			$scope.albums[i].opened = !$scope.albums[i].opened; 
 			if ($scope.albums[i].opened) {
 				$scope.album = $scope.albums[i]
-				$scope.photo = $scope.album.photos[0]
+				$scope.photo = $scope.album.photoList[0]
 			}
 		}
 
 		$scope.albums = window._.where(albums, {enabled: true});
-		//load photo data into $scope.albums
-		window._.each($scope.albums, function(album) {
-			window._.each(album.photos, function(photo) {
-				window._.extend(photo, window._.findWhere(photos, {_id: photo._id}));	
-			});			
-		});
 
-		$scope.album = $scope.albums[0];
-		$scope.album.opened = true;
-		$scope.photo  = $scope.album.photos[0];
-		$scope.prev = $scope.album.photos.length - 1; 
-		$scope.next = 1;
+		if ($scope.albums.length > 0) {
+			
+			//load photo data into $scope.albums
+			window._.each($scope.albums, function(album) {
+				window._.each(album.photoList, function(entry) {
+					window._.extend(entry, window._.findWhere(photos, {_id: entry._id}));	
+				});			
+			});
+
+			$scope.album = $scope.albums[0];
+			$scope.album.opened = true;
+			$scope.photo  = $scope.album.photoList[0];
+			$scope.prev = $scope.album.photoList.length - 1; 
+			$scope.next = 1;
+
+		}
 
 	}
 ]);
@@ -390,7 +355,6 @@ photomgrControllers.controller('ProfileCtrl', ['$scope', 'Auth',
 	}
 ]);
 
-
 //To Pre-load Album & Photo data before route change 
 PhotoMgrData = { 
 
@@ -398,21 +362,23 @@ PhotoMgrData = {
 		return $route.current.params.albumId ? Album.get({id: $route.current.params.albumId}).$promise : new Album();
 	},
 
-	photo: function(Photo, Album, $route) {
+	photo: function(Photo, $route) {
 		return $route.current.params.photoId ? Photo.get({id: $route.current.params.photoId}).$promise : new Photo();
 	},
 
-	albums: function(Album) {
-		return Album.query().$promise;
+	albums: function(Album, $route, $location) { //return all albums only if URL /albums/* but not /albums/add
+		if (RegExp('\/albums').test($location.path()) && $route.current.params.view !== 'add') {
+			return Album.query().$promise;
+		} else {
+			return [];	
+		}
 	},	
 
-	photos: function(Photo, Album, $route, $location) {	
-		if ($route.current.params.view === 'add') {
-			return '';
-		} else if ($route.current.params.albumId) {
-			return Album.getPhotos({id: $route.current.params.albumId}).$promise;
-		} else {
+	photos: function(Photo, $route, $location) { //return all photos only if URL /photos/* but not /photos/add
+		if (RegExp('\/photos').test($location.path()) && $route.current.params.view !== 'add') {
 			return Photo.query().$promise;
+		} else {
+			return [];	
 		}
 	},
 

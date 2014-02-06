@@ -3,7 +3,7 @@ var photomgrServices = angular.module('photomgrServices', ['ngResource']);
 photomgrServices.factory('Photo', ['$resource', 
 	function($resource){
 		return $resource('/photos/:id/', { id: '@_id'}, {
-			query: {method:'GET', isArray:true},
+			query: {method:'GET', isArray: true},
 			uploadPhoto: {
             method: 'POST',
             url: '/upload',
@@ -18,7 +18,10 @@ photomgrServices.factory('Album', ['$resource',
 		return $resource('/albums/:id/', {id: '@_id'}, {
 			query: {method:'GET', isArray:true},
          getPhotos: {
-             method:'GET', isArray:true, url:'/gallery/:id/'
+             method:'GET', isArray: true, url:'/gallery/:id/'
+         },
+         editAlbumPhotos: {
+            method: 'POST', params: {photoId: '@photoId', action: '@action'}, isArray:false, url:'/albums/:id/:action/:photoId/'
          }
 		});
 	}]);
@@ -62,7 +65,13 @@ photomgrServices.factory('PhotoMgrService', ['Album', 'Photo',
    function(Album, Photo) {
 
    var pmSvc = {};
-    
+
+   pmSvc.editAlbumPhotos = function (action, photo, album) {
+      return Album.editAlbumPhotos({action: action, _id: album._id, photoId: photo._id}, function(data){
+         return data;
+      })
+   }
+   
    pmSvc.getAlbum = function (id) {
       return Album.get({id: id}, function(data) {
          return data;
@@ -80,6 +89,12 @@ photomgrServices.factory('PhotoMgrService', ['Album', 'Photo',
          return data;
       });
    }
+
+   pmSvc.getAllAlbums = function() {
+      return Album.query({}, function(data) {
+         return data;
+      });
+   }   
 
    pmSvc.saveAlbum = function(album) {
       return Album.save({}, album, function(data) {
@@ -132,68 +147,4 @@ photomgrServices.factory('PhotoMgrService', ['Album', 'Photo',
  
    return pmSvc;
 
-}]);
-
-photomgrServices.factory('Util', ['Album', 'Photo',   
-   function(Album, Photo) {
-
-      var util = {};
-      
-      util.addPhotoToAlbum = function (album,photo){
-         //verify not duplicate entry then add and save
-         if (!window._.contains(photo.albums, album._id)) {
-            if (!photo.albums) {photo.albums = []}
-            photo.albums.push(album._id);
-            console.log("Added album " + album.name + " to Photo " + photo.name)
-            photo.$save()  
-         } else {
-            console.log("Error adding to PHOTO");
-         }
-         if (!window._.findWhere(album.photos, {_id: photo._id})) {
-            album.photos.push({order: album.photos.length, _id: photo._id})   
-            console.log("Added photo " + photo.name + " to Album " + album.name)
-            album.$save()              
-         } else {
-            console.log("Error adding to ALBUM");
-         }
-      };
-
-      util.removePhotoFromAlbum = function(removeAlbum,removePhoto){
-         var album = removeAlbum;
-         var photo = removePhoto;
-         // remove albumID from photo document
-         if (window._.contains(photo.albums, album._id)) {
-            photo.albums.splice(window._.indexOf(photo.albums, album._id), 1);
-            Photo.save(photo);
-         } 
-         //remove photoID from album document
-         if (window._.findWhere(album.photos, {_id: photo._id})) {
-            album.photos.splice(window._.indexOf(album.photos, photo), 1);
-            Album.save(album);        
-         }            
-      };
-
-      //removes albumID from all of the photos references
-      util.removeAlbumReferences = function(deletedAlbum) {
-         window._.each(deletedAlbum.photos, function(photo) {
-            Photo.get({id: photo._id}, function(data) {
-               var p = data;
-               p.albums.splice(window._.indexOf(p.albums, deletedAlbum._id));
-               p.$save();              
-            })
-         });               
-      };
-
-      //remove photoID from all of the albums it references
-      util.removePhotoReferences = function(deletedPhoto) {
-         window._.each(deletedPhoto.albums, function(album) {
-            Album.get({id: album}, function(data) {
-               var a = data;
-               a.photos.splice(window._.indexOf(a.photos, deletedPhoto._id));
-               a.$save();              
-            })
-         });          
-      };
-
-      return util;
 }]);

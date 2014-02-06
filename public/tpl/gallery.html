@@ -15,7 +15,7 @@
 		    	</div>
 			    <div class="panel-collapse" data-ng-class="a.opened ? 'collapse in' : 'collapse'">
 			      <div class="panel-body gallery-photo-name">
-			      	<div data-ng-repeat="p in a.photos" data-ng-class="(p._id === photo._id) ? 'active' : ''">
+			      	<div data-ng-repeat="p in a.photoList" data-ng-class="(p._id === photo._id) ? 'active' : ''">
 			      		<a data-ng-click="clickPhoto(a._id, $index)">{{p.name}}</a>
 			      	</div>
 			      </div>
@@ -31,7 +31,7 @@
 		<div class="well well-sm">
 			<div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
 				<div class="carousel-inner">
-					<div class="carousel-img item" data-ng-repeat="p in album.photos" data-ng-class="(p._id === photo._id) ? 'active' : ''">
+					<div class="carousel-img item" data-ng-repeat="p in album.photoList" data-ng-class="(p._id === photo._id) ? 'active' : ''">
 						<img data-ng-src="{{p.filepath}}">
 					</div>		
 				</div>
@@ -41,7 +41,7 @@
 
 		<ul class="pagination">
 			<li data-ng-click="clickPhoto(album._id, prev)"><a>&laquo;</a></li>
-			<li data-ng-repeat="p in album.photos" data-ng-class="(p._id === photo._id) ? 'active' : ''" data-ng-click="clickPhoto(album._id, $index)"><a>{{$index + 1}}</a></li>
+			<li data-ng-repeat="p in album.photoList" data-ng-class="(p._id === photo._id) ? 'active' : ''" data-ng-click="clickPhoto(album._id, $index)"><a>{{$index + 1}}</a></li>
 			<li data-ng-click="clickPhoto(album._id, next)"><a>&raquo;</a></li>
 		</ul>
 

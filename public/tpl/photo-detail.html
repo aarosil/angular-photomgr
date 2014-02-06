@@ -47,8 +47,8 @@
                 <div class="form-group">
                     <label for="album" class="col-lg-4 control-label">In Albums:</label>
                     <div class="col-lg-8">    
-                        <div class="in-albums-list list-group" data-ng-if="inAlbums.length > 0">
-                            <div class="list-group-item" data-ng-repeat="album in inAlbums">{{album.name}}
+                        <div class="in-albums-list list-group" data-ng-if="photo.albums.length > 0">
+                            <div class="list-group-item" data-ng-repeat="album in photo.albums">{{album.name}}
                                 <div class="pull-right">                     
                                     <a class="btn btn-xs btn-link" href="#/albums/detail/{{album._id}}" title="View Album Details">
                                         <span class="glyphicon glyphicon-cog"></span>    

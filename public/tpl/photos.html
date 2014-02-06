@@ -20,7 +20,7 @@
           <tr data-ng-repeat="photo in photos| filter:pmSvc.filter">
             <td><a href="#/photos/detail/{{photo._id}}">{{photo.name}}</a></td>
             <td>
-              <span data-ng-repeat="album in photo.albumNames">
+              <span data-ng-repeat="album in photo.albums">
                 <span data-ng-hide="$index === 0">,</span><a href="#/albums/detail/{{album._id}}">{{album.name}}</a>
               </span>
             </td>                 
@@ -35,9 +35,9 @@
 
   <!-- GRID VIEW -->
   <div class="row grid-container" data-ng-if="view === 'grid'">
-    <div class="col-lg-2" data-ng-repeat="photo in photos| filter:pmSvc.filter">
-      <a href="#/photos/detail/{{photo._id}}">
-        <div class="thumbnail photogrid-thumbnail">
+    <div class="col-lg-2 photogrid-thumbnail" data-ng-repeat="photo in photos| filter:pmSvc.filter">
+      <a href="#/photos/detail/{{photo._id}}" style="display:block">
+        <div class="thumbnail ">
           <img class="img-thumbnail" style="width: 120px; height: 120px" data-ng-src="{{photo.filepath}}"/>
           <div class="photogrid-caption caption">
             <h4>{{photo.name}}</h4>

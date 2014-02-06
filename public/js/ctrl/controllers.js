@@ -116,7 +116,7 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'P
 
 			modalInstance.result.then(function (album) {
 				$scope.pmSvc.editAlbumPhotos('add',$scope.photo, album);
-	            $scope.inAlbums.push(album); 
+	            $scope.photo.albums.push(album); 
 			}, function () {
 				console.log('Modal dismissed');
 			});
@@ -126,7 +126,7 @@ photomgrControllers.controller('PhotoCtrl', ['$scope', '$location', '$modal', 'P
 		$scope.removePhotoFromAlbum = function(album) {
 			$scope.pmSvc.editAlbumPhotos('remove',$scope.photo,album);
 			//update display
-			$scope.inAlbums.splice(window._.indexOf($scope.inAlbums, album), 1);
+			$scope.photo.albums.splice(window._.indexOf($scope.inAlbums, album), 1);
 		}		
 
 		$scope.pmSvc = PhotoMgrService;
